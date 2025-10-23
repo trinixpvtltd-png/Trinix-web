@@ -1,21 +1,5 @@
 [
   {
-    "slug": "hiii",
-    "title": "hello",
-    "blurb": "wsgbhsrthsntsbnsery",
-    "author": "myself",
-    "published_at": "2025-10-23",
-    "publication_date": "2025-10-23",
-    "estimated_read_duration": "5 mins",
-    "description_points": [
-      "SOS Emergency Network",
-      "SOS Emergency Network",
-      "SOS Emergency Network",
-      "SOS Emergency Network",
-      "SOS Emergency Network"
-    ]
-  },
-  {
     "slug": "quantum-k8s-flight",
     "title": "Quantum Workload Flight Plans on Kubernetes",
     "blurb": "Pre-emptive node choreography with probabilistic scheduling meshes.",
