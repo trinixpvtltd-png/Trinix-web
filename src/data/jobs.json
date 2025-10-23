@@ -1,26 +1,26 @@
 [
   {
-    "id": "frontend",
-    "title": "frontend developer",
-    "location": "noida",
+    "id": "Intern",
+    "title": "Software Engineering Intern",
+    "location": "Hybrid",
     "type": "Internship",
-    "description": "interesting role",
-    "link": "https://example.com/"
-  },
-  {
-    "id": "quantum-researcher",
-    "title": "Quantum Research Scientist",
-    "location": "Bengaluru, India",
-    "type": "Full-time",
-    "description": "Lead quantum-classical co-design initiatives for Trinix research pods.",
+    "description": "Software Engineering Major with a diverse skill-set",
     "link": "#"
   },
   {
-    "id": "k8s-architect",
-    "title": "Kubernetes Platform Architect",
+    "id": "Intern",
+    "title": "Research Intern",
+    "location": "Hybrid",
+    "type": "Full-time",
+    "description": "Classical initiatives for Trinix research pods.",
+    "link": "#"
+  },
+  {
+    "id": "AI Specialist",
+    "title": "AI Platform Architect",
     "location": "Remote",
     "type": "Full-time",
-    "description": "Architect resilient multi-cluster Kubernetes meshes optimized for AI workloads.",
+    "description": "Architect resilient AI workloads.",
     "link": "#"
   },
   {
