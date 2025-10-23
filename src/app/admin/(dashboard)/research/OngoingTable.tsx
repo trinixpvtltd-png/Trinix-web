@@ -1,6 +1,6 @@
 import type { ResearchCatalogue } from "@/server/data/researchStore";
 
-import { OngoingRow } from "@/app/admin/research/OngoingRow";
+import { OngoingRow } from "./OngoingRow";
 
 type Props = {
   entries?: ResearchCatalogue["ongoing"];

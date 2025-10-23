@@ -1,6 +1,6 @@
 import type { ResearchCatalogue } from "@/server/data/researchStore";
 
-import { PreprintRow } from "@/app/admin/research/PreprintRow";
+import { PreprintRow } from "./PreprintRow";
 
 type Props = {
   entries?: ResearchCatalogue["preprints"];

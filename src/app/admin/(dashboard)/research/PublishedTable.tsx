@@ -1,6 +1,6 @@
 import type { ResearchCatalogue } from "@/server/data/researchStore";
 
-import { PublishedRow } from "@/app/admin/research/PublishedRow";
+import { PublishedRow } from "./PublishedRow";
 
 type Props = {
   entries?: ResearchCatalogue["published"];
