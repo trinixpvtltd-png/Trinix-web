@@ -46,17 +46,17 @@ function ContactSection() {
       {
         icon: "📍",
         title: "Our Headquarters",
-        lines: ["FF-110, Harsha Mall, Commercial Belt, Alpha-1, Greater Noida,201310", "Uttar Pradesh"],
+        lines: ["FF-110, Harsha Mall, Commercial Belt, Alpha-1, Greater Noida, Uttar Pradesh, India, 201310"],
       },
       {
         icon: "📞",
         title: "Sales & Support",
-        lines: ["+91 8006464222, +91 9899721172, +91 8510910056"],
+        lines: ["+91 8006464222"],
       },
       {
         icon: "✉️",
         title: "Email",
-        lines: ["General Inquiries: trinix.pvt.ltd@gmail.com"],
+        lines: ["info@trinix.org.in"],
       },
     ],
     []
