@@ -12,6 +12,7 @@ import { VisualEnvironment } from "@/components/universe/VisualEnvironment";
 import { Nebula } from "@/components/universe/Nebula";
 import { UniverseFX } from "@/3d/postfx/UniverseFX";
 import projectsJson from "@/data/projects.json";
+import { resolveProjectHref } from "@/lib/projectLinks";
 import type { Project } from "@/types/content";
 import * as THREE from "three";
 import { useScroll } from "framer-motion";
@@ -85,6 +86,7 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
   const visuals = useVisualsMode();
   const isMobile = typeof window !== "undefined" ? window.innerWidth < 768 : false;
   const [allowRender, setAllowRender] = useState(false);
+  const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Guard: ensure exactly one Canvas mount
   useEffect(() => {
@@ -197,6 +199,53 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
     }
   }, []);
 
+  useEffect(() => {
+    if (!allowRender || typeof window === "undefined") return;
+    const canvas = canvasRef.current;
+    if (!canvas) return;
+
+    let lastTouchY: number | null = null;
+
+    const handleWheel = (event: WheelEvent) => {
+      if (event.ctrlKey) return;
+      event.preventDefault();
+      window.scrollBy({ top: event.deltaY, behavior: "auto" });
+    };
+
+    const handleTouchStart = (event: TouchEvent) => {
+      if (event.touches.length !== 1) return;
+      lastTouchY = event.touches[0].clientY;
+    };
+
+    const handleTouchMove = (event: TouchEvent) => {
+      if (event.touches.length !== 1 || lastTouchY == null) return;
+      const currentY = event.touches[0].clientY;
+      const deltaY = lastTouchY - currentY;
+      if (Math.abs(deltaY) < 0.5) return;
+      event.preventDefault();
+      window.scrollBy({ top: deltaY, behavior: "auto" });
+      lastTouchY = currentY;
+    };
+
+    const clearTouch = () => {
+      lastTouchY = null;
+    };
+
+    canvas.addEventListener("wheel", handleWheel, { passive: false, capture: true });
+    canvas.addEventListener("touchstart", handleTouchStart, { passive: true });
+    canvas.addEventListener("touchmove", handleTouchMove, { passive: false });
+    canvas.addEventListener("touchend", clearTouch);
+    canvas.addEventListener("touchcancel", clearTouch);
+
+    return () => {
+      canvas.removeEventListener("wheel", handleWheel, true);
+      canvas.removeEventListener("touchstart", handleTouchStart);
+      canvas.removeEventListener("touchmove", handleTouchMove);
+      canvas.removeEventListener("touchend", clearTouch);
+      canvas.removeEventListener("touchcancel", clearTouch);
+    };
+  }, [allowRender]);
+
   return (
     <div className="relative" style={{ height: `120vh` }}>
       <div className="sticky top-0 min-h-[92vh] h-screen w-screen overflow-hidden" data-universe-sticky>
@@ -206,6 +255,10 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
             camera={{ position: [0, 2, 40], fov: isMobile ? 55 : 40, near: 0.1, far: 1000 }}
             dpr={isMobile ? [1, 1] : [1, 1.5]}
             gl={{ antialias: true, powerPreference: "high-performance" }}
+            onCreated={({ gl }) => {
+              canvasRef.current = gl.domElement;
+              gl.domElement.style.touchAction = "auto";
+            }}
           >
           {visuals === "enhanced" ? <Nebula /> : null}
           <color attach="background" args={["#00010a"]} />
@@ -300,12 +353,22 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
                         typeof project.status === "string" ? project.status.toUpperCase() : undefined;
                       const domainLabel = project.domain ?? undefined;
                       const featureList = project.keyFeatures ?? [];
-                      const ctas =
+                      const rawCtas =
                         project.ctas && project.ctas.length > 0
                           ? project.ctas
                           : project.link
                           ? [{ label: "Explore", href: project.link }]
                           : [];
+                      const ctas = rawCtas.map((cta) => ({
+                        ...cta,
+                        href: resolveProjectHref(cta.href, project.name),
+                      }));
+                      if (ctas.length === 0) {
+                        ctas.push({
+                          label: "Explore",
+                          href: resolveProjectHref(undefined, project.name),
+                        });
+                      }
                       return (
                         <>
                           <h3 className="mt-2 font-display text-2xl font-semibold">{parts.base}</h3>

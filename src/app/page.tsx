@@ -9,6 +9,7 @@ import { AnimatedBackground } from "@/components/AnimatedBackground";
 import projects from "@/data/projects.json";
 import { POSTS } from "@/data/blogPosts";
 import { formatDate } from "@/lib/formatDate";
+import { resolveProjectHref } from "@/lib/projectLinks";
 import type { Project } from "@/types/content";
 import researchPublications from "@/../public/data/research_publications.json";
 
@@ -150,20 +151,28 @@ export default function Home() {
             role="list"
             aria-label="Featured project summaries"
           >
-            {featuredProjects.map((project) => (
-              <article
-                key={project.id ?? project.name}
-                role="article"
-                aria-labelledby={`featured-project-${slugify(project.name)}-title`}
-                className="flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-aurora backdrop-blur-xl focus-within:border-white/20"
-                tabIndex={0}
-                onKeyDown={(event) => {
-                  if (event.key === "Enter") {
-                    const href = project.ctas?.[0]?.href ?? project.link ?? "/projects";
-                    router.push(href);
-                  }
-                }}
-              >
+            {featuredProjects.map((project) => {
+              const ctas = deriveProjectCtas(project);
+              const primaryHref = ctas[0]?.href ?? resolveProjectHref(project.link, project.name);
+              return (
+                <article
+                  key={project.id ?? project.name}
+                  role="article"
+                  aria-labelledby={`featured-project-${slugify(project.name)}-title`}
+                  className="flex h-full flex-col justify-between rounded-3xl border border-white/10 bg-white/5 p-6 text-white shadow-aurora backdrop-blur-xl focus-within:border-white/20"
+                  tabIndex={0}
+                  onKeyDown={(event) => {
+                    if (event.key === "Enter" || event.key === " ") {
+                      event.preventDefault();
+                      router.push(primaryHref);
+                    }
+                  }}
+                  onClick={(event) => {
+                    const target = event.target as HTMLElement;
+                    if (target.closest("a")) return;
+                    router.push(primaryHref);
+                  }}
+                >
                 <div className="space-y-4">
                   <div className="flex items-center justify-between text-xs uppercase tracking-[0.3em] text-white/60">
                     <span className="rounded-full border border-aurora-teal/40 bg-aurora-teal/10 px-3 py-1 text-aurora-teal">
@@ -188,22 +197,23 @@ export default function Home() {
                 </div>
 
                 <div className="mt-6 flex flex-wrap gap-3 text-sm uppercase tracking-[0.25em]">
-                  {deriveProjectCtas(project).map((cta, index) => (
-                    <Link
-                      key={`${project.id}-cta-${cta.label}`}
-                      href={cta.href}
-                      className={
-                        index === 0
-                          ? "rounded-md border border-aurora-teal/50 px-3 py-1 text-white transition hover:border-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
-                          : "rounded-md border border-white/20 px-3 py-1 text-white/80 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
-                      }
-                    >
-                      {cta.label}
-                    </Link>
-                  ))}
+                    {ctas.map((cta, index) => (
+                      <Link
+                        key={`${project.id}-cta-${cta.label}`}
+                        href={cta.href}
+                        className={
+                          index === 0
+                            ? "rounded-md border border-aurora-teal/50 px-3 py-1 text-white transition hover:border-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
+                            : "rounded-md border border-white/20 px-3 py-1 text-white/80 transition hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
+                        }
+                      >
+                        {cta.label}
+                      </Link>
+                    ))}
                 </div>
-              </article>
-            ))}
+                </article>
+              );
+            })}
           </div>
         </section>
 
@@ -306,16 +316,27 @@ function selectFeaturedProjects(projectsList: Project[]): Project[] {
 }
 
 function deriveProjectCtas(project: Project) {
-  const ctas = [] as { label: string; href: string }[];
-  const primaryHref = project.ctas?.[0]?.href ?? project.link ?? "/projects";
-  if (primaryHref) {
-    ctas.push({ label: "Explore", href: primaryHref });
+  const raw = project.ctas && project.ctas.length > 0 ? project.ctas : [];
+  const normalized = raw.slice(0, 2).map((cta, index) => ({
+    label: cta.label ?? (index === 0 ? "Explore" : "Details"),
+    href: resolveProjectHref(cta.href, project.name),
+  }));
+
+  if (!normalized.length) {
+    normalized.push({
+      label: "Explore",
+      href: resolveProjectHref(project.link, project.name),
+    });
   }
-  const secondaryHref = project.ctas?.[1]?.href;
-  if (secondaryHref) {
-    ctas.push({ label: "Details", href: secondaryHref });
+
+  if (!normalized.length) {
+    normalized.push({
+      label: "Explore",
+      href: resolveProjectHref(undefined, project.name),
+    });
   }
-  return ctas;
+
+  return normalized;
 }
 
 function selectLatestPosts(posts: typeof POSTS, count: number) {

@@ -5,6 +5,7 @@ import Link from "next/link";
 import { useRouter } from "next/navigation";
 
 import projectsData from "@/data/projects.json";
+import { resolveProjectHref } from "@/lib/projectLinks";
 import type { Project } from "@/types/content";
 
 const PROJECTS = projectsData as Project[];
@@ -27,6 +28,11 @@ export default function ProjectsPage() {
                 e.preventDefault();
                 const el = document.getElementById("projects-grid");
                 el?.scrollIntoView({ behavior: "smooth", block: "start" });
+                if (el instanceof HTMLElement) {
+                  window.setTimeout(() => {
+                    el.focus({ preventScroll: true });
+                  }, 320);
+                }
               }}
               className="rounded-full border border-aurora-teal/60 bg-white/5 px-4 py-2 text-xs uppercase tracking-[0.25em] text-white hover:border-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
               aria-label="Skip to projects grid"
@@ -39,7 +45,7 @@ export default function ProjectsPage() {
       </section>
 
       {/* Projects Grid (below the 3D solar system) */}
-      <section id="projects-grid" className="mt-6 md:mt-10 scroll-mt-24 md:scroll-mt-28">
+    <section id="projects-grid" className="mt-6 md:mt-10 scroll-mt-24 md:scroll-mt-28" tabIndex={-1}>
         <div className="max-w-7xl mx-auto px-6 md:px-10">
           <h2 className="text-2xl md:text-3xl font-semibold">Projects</h2>
           <p className="mt-1 text-sm text-white/70">Explore live platforms and upcoming launches across domains.</p>
@@ -49,13 +55,23 @@ export default function ProjectsPage() {
             aria-label="Project summaries"
           >
             {PROJECTS.map((project) => {
-              const ctas =
+              const rawCtas =
                 project.ctas && project.ctas.length > 0
                   ? project.ctas
                   : project.link
                   ? [{ label: "Explore", href: project.link }]
                   : [];
-              const primaryHref = ctas[0]?.href ?? project.link ?? "#";
+              const ctas = rawCtas.map((cta) => ({
+                ...cta,
+                href: resolveProjectHref(cta.href, project.name),
+              }));
+              if (ctas.length === 0) {
+                ctas.push({
+                  label: "Explore",
+                  href: resolveProjectHref(undefined, project.name),
+                });
+              }
+              const primaryHref = ctas[0]?.href ?? resolveProjectHref(project.link, project.name);
               const statusLabel =
                 typeof project.status === "string" ? project.status.toUpperCase() : "IN PROGRESS";
               const domainLabel = project.domain ?? "Multidisciplinary";
@@ -67,9 +83,15 @@ export default function ProjectsPage() {
                   aria-labelledby={`proj-${slugify(project.name)}-title`}
                   tabIndex={0}
                   onKeyDown={(e) => {
-                    if (e.key === "Enter") {
+                    if (e.key === "Enter" || e.key === " ") {
+                      e.preventDefault();
                       router.push(primaryHref);
                     }
+                  }}
+                  onClick={(e) => {
+                    const target = e.target as HTMLElement;
+                    if (target.closest("a")) return;
+                    router.push(primaryHref);
                   }}
                   className="rounded-2xl border border-white/10 bg-white/5 backdrop-blur-xl shadow-xl overflow-hidden hover:shadow-2xl hover:border-white/20 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
                 >
@@ -144,3 +166,4 @@ function slugify(s: string) {
     .replace(/[^a-z0-9]+/g, "-")
     .replace(/(^-|-$)/g, "");
 }
+

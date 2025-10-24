@@ -1,6 +1,6 @@
 "use client";
 
-import { useCallback, useEffect, useMemo, useState } from "react";
+import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ResearchHero } from "@/components/research/ResearchHero";
 import { ResearchTabs } from "@/components/research/ResearchTabs";
 import { FiltersBar, Filters as FiltersType } from "@/components/research/FiltersBar";
@@ -60,6 +60,54 @@ type Data = {
 };
 
 const HASH_PREFIX = "pubs";
+
+function ResearchModalLayout({
+  titleId,
+  descId,
+  title,
+  meta,
+  onClose,
+  children,
+}: {
+  titleId: string;
+  descId: string;
+  title: string;
+  meta: ReactNode;
+  onClose: () => void;
+  children: ReactNode;
+}) {
+  return (
+    <div>
+      <div className="flex items-start justify-between gap-4">
+        <div>
+          <h2 id={titleId} className="text-xl md:text-2xl font-semibold">
+            {title}
+          </h2>
+          <div id={descId} className="mt-1 text-xs text-white/70">
+            {meta}
+          </div>
+        </div>
+        <button
+          data-autofocus
+          className="rounded-md border border-white/20 px-3 py-1 text-sm text-white/80 hover:text-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
+          onClick={onClose}
+        >
+          Close
+        </button>
+      </div>
+      <div className="mt-4 space-y-4">{children}</div>
+    </div>
+  );
+}
+
+function ModalInfoBlock({ label, children }: { label: string; children: ReactNode }) {
+  return (
+    <div>
+      <div className="text-xs uppercase tracking-widest text-white/60">{label}</div>
+      <div className="mt-1 text-sm text-white/80">{children}</div>
+    </div>
+  );
+}
 
 export function ResearchHub() {
   const [active, setActive] = useState<TabId>("published");
@@ -215,64 +263,47 @@ export function ResearchHub() {
           if (!modal || modal.kind !== "preprint") return null;
           const p = data.preprints.find((x) => x.id === modal.id);
           if (!p) return <div>No data.</div>;
+          const meta = `${p.server} • ${p.identifier} • ${formatDate(p.version_date, "short") || "Draft in review"}`;
           return (
-            <div>
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 id="modal-title" className="text-xl md:text-2xl font-semibold">{p.title}</h2>
-                  <p id="modal-desc" className="mt-1 text-xs text-white/70">{p.server} • {p.identifier} • {formatDate(p.version_date, "short") || "Draft in review"}</p>
-                </div>
-                <button data-autofocus className="rounded-md border border-white/20 px-3 py-1 text-sm text-white/80 hover:text-white" onClick={closeModal}>Close</button>
-              </div>
-              <div className="mt-4 space-y-4">
-                <div>
-                  <div className="text-xs uppercase tracking-widest text-white/60">Authors</div>
-                  <div className="mt-1 text-sm text-white/80">{p.authors?.join(', ') || '-'}</div>
-                </div>
-                {p.abstract ? (
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-white/60">Abstract</div>
-                    <p className="mt-1 text-sm text-white/80 whitespace-pre-wrap">{p.abstract}</p>
-                  </div>
-                ) : null}
-                <div>
-                  <div className="text-xs uppercase tracking-widest text-white/60">Manuscript</div>
-                  {p.pdf ? (
-                    <div className="mt-2 rounded-lg border border-white/10 overflow-hidden">
-                      <iframe src={p.pdf} className="w-full" style={{ height: '75vh' }} title="Preprint PDF" />
+            <ResearchModalLayout titleId="modal-title" descId="modal-desc" title={p.title} meta={meta} onClose={closeModal}>
+              <ModalInfoBlock label="Authors">{p.authors?.join(", ") || "-"}</ModalInfoBlock>
+              {p.abstract ? (
+                <ModalInfoBlock label="Abstract">
+                  <p className="whitespace-pre-wrap">{p.abstract}</p>
+                </ModalInfoBlock>
+              ) : null}
+              <ModalInfoBlock label="Manuscript">
+                {p.pdf ? (
+                  <div className="space-y-3">
+                    <div className="rounded-lg border border-white/10 overflow-hidden">
+                      <iframe src={p.pdf} className="w-full" style={{ height: "75vh" }} title="Preprint PDF" />
                     </div>
-                  ) : (
-                    <div className="mt-2 text-white/60">No PDF available.</div>
-                  )}
-                  <div className="mt-3 flex flex-wrap gap-3 text-sm">
-                    {p.pdf ? (
+                    <div className="flex flex-wrap gap-3 text-sm">
                       <a
                         href={p.pdf}
                         target="_blank"
                         rel="noopener noreferrer"
                         className="rounded-md border border-aurora-teal/40 px-3 py-1 text-white hover:border-white"
-                        onClick={() => console.log('preprint_pdf_open', p.id)}
+                        onClick={() => console.log("preprint_pdf_open", p.id)}
                       >
                         Open in new tab
                       </a>
-                    ) : null}
-                    {p.pdf ? (
                       <a
                         href={p.pdf}
                         download
                         className="rounded-md border border-white/20 px-3 py-1 text-white/80 hover:text-white"
-                        onClick={() => console.log('preprint_pdf_download', p.id)}
+                        onClick={() => console.log("preprint_pdf_download", p.id)}
                       >
                         Download
                       </a>
-                    ) : null}
-                    {p.pdf ? (
                       <span className="text-xs text-white/50 self-center">If the viewer is blocked, use Download.</span>
-                    ) : null}
+                    </div>
                   </div>
-                </div>
-              </div>
-            </div>
+                ) : (
+                  <div className="text-white/60">No PDF available.</div>
+                )}
+              </ModalInfoBlock>
+            </ResearchModalLayout>
           );
         })()}
       </Modal>
@@ -283,32 +314,45 @@ export function ResearchHub() {
           if (!modal || modal.kind !== "ongoing") return null;
           const p = data.ongoing.find((x) => x.id === modal.id);
           if (!p) return <div>No data.</div>;
+          const meta = `${p.series || "Series"} • Next: ${p.milestone_next} • ETA: ${p.eta_quarter}`;
           return (
-            <div>
-              <div className="flex items-start justify-between gap-4">
-                <div>
-                  <h2 id="modal-title" className="text-xl md:text-2xl font-semibold">{p.title}</h2>
-                  <p id="modal-desc" className="mt-1 text-xs text-white/70">{p.series || 'Series'} • Next: {p.milestone_next} • ETA: {p.eta_quarter}</p>
-                </div>
-                <button data-autofocus className="rounded-md border border-white/20 px-3 py-1 text-sm text-white/80 hover:text-white" onClick={closeModal}>Close</button>
-              </div>
-              <div className="mt-4 space-y-4">
-                <div>
-                  <div className="text-xs uppercase tracking-widest text-white/60">Lead & Team</div>
-                  <div className="mt-1 text-sm text-white/80">Lead: {p.lead_researcher}{p.team && p.team.length ? ` • Team: ${p.team.join(', ')}` : ''}</div>
-                </div>
-                {p.short_description ? (
-                  <div>
-                    <div className="text-xs uppercase tracking-widest text-white/60">Overview</div>
-                    <p className="mt-1 text-sm text-white/80 whitespace-pre-wrap">{p.short_description}</p>
+            <ResearchModalLayout titleId="modal-title" descId="modal-desc" title={p.title} meta={meta} onClose={closeModal}>
+              <ModalInfoBlock label="Lead & Team">
+                Lead: {p.lead_researcher}
+                {p.team && p.team.length ? ` • Team: ${p.team.join(", ")}` : ""}
+              </ModalInfoBlock>
+              {p.short_description ? (
+                <ModalInfoBlock label="Overview">
+                  <p className="whitespace-pre-wrap">{p.short_description}</p>
+                </ModalInfoBlock>
+              ) : null}
+              {p.brief || p.spec ? (
+                <ModalInfoBlock label="Resources">
+                  <div className="flex flex-wrap gap-3 text-sm">
+                    {p.brief ? (
+                      <a
+                        href={p.brief}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-md border border-aurora-teal/40 px-3 py-1 text-white hover:border-white"
+                      >
+                        Brief
+                      </a>
+                    ) : null}
+                    {p.spec ? (
+                      <a
+                        href={p.spec}
+                        target="_blank"
+                        rel="noopener noreferrer"
+                        className="rounded-md border border-white/20 px-3 py-1 text-white/80 hover:text-white"
+                      >
+                        Spec
+                      </a>
+                    ) : null}
                   </div>
-                ) : null}
-                <div className="mt-2 flex gap-3 text-sm">
-                  {p.brief ? (<a href={p.brief} target="_blank" rel="noopener noreferrer" className="rounded-md border border-aurora-teal/40 px-3 py-1 text-white hover:border-white">Brief</a>) : null}
-                  {p.spec ? (<a href={p.spec} target="_blank" rel="noopener noreferrer" className="rounded-md border border-white/20 px-3 py-1 text-white/80 hover:text-white">Spec</a>) : null}
-                </div>
-              </div>
-            </div>
+                </ModalInfoBlock>
+              ) : null}
+            </ResearchModalLayout>
           );
         })()}
       </Modal>
