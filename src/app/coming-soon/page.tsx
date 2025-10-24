@@ -5,14 +5,16 @@ export const metadata = {
   description: "Discover upcoming launches from Trinix Pvt. Ltd.",
 };
 
+type SearchParams = Record<string, string | string[] | undefined>;
+
 type ComingSoonPageProps = {
-  searchParams?: {
-    name?: string;
-  };
+  searchParams?: SearchParams | Promise<SearchParams>;
 };
 
-export default function ComingSoonPage({ searchParams }: ComingSoonPageProps) {
-  const rawName = searchParams?.name ?? "";
+export default async function ComingSoonPage({ searchParams }: ComingSoonPageProps) {
+  const resolved = (await Promise.resolve(searchParams)) ?? {};
+  const rawCandidate = resolved.name;
+  const rawName = Array.isArray(rawCandidate) ? rawCandidate[0] ?? "" : rawCandidate ?? "";
   let projectName = "";
   if (rawName) {
     try {
