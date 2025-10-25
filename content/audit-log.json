@@ -15,26 +15,6 @@
     }
   },
   {
-    "id": "40f92add-2e0c-4602-b8ec-2bae3702fdae",
-    "timestamp": "2025-10-22T20:09:56.784Z",
-    "resource": "research-published",
-    "action": "create",
-    "userId": "admin",
-    "after": {
-      "id": "sos",
-      "title": "bohot badiuya",
-      "authors": [
-        "CHIRAG JAIN"
-      ],
-      "venue": "journal",
-      "doi": "www.google.com",
-      "open_access": true,
-      "domain": [
-        "FINTECH"
-      ]
-    }
-  },
-  {
     "id": "5ebe99ee-d2b1-431e-abbc-ae3dd7c7f172",
     "timestamp": "2025-10-22T20:07:09.457Z",
     "resource": "projects",
@@ -62,29 +42,6 @@
           "label": "Capabilities",
           "href": "/coming-soon"
         }
-      ]
-    }
-  },
-  {
-    "id": "3cecb4a8-2da5-42dc-9ac6-82995adf1b2d",
-    "timestamp": "2025-10-22T20:04:23.021Z",
-    "resource": "blog",
-    "action": "create",
-    "userId": "admin",
-    "after": {
-      "slug": "hiii",
-      "title": "hello",
-      "blurb": "wsgbhsrthsntsbnsery",
-      "author": "myself",
-      "published_at": "2025-10-23",
-      "publication_date": "2025-10-23",
-      "estimated_read_duration": "5 mins",
-      "description_points": [
-        "SOS Emergency Network",
-        "SOS Emergency Network",
-        "SOS Emergency Network",
-        "SOS Emergency Network",
-        "SOS Emergency Network"
       ]
     }
   },
