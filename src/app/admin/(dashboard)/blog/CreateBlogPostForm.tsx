@@ -1,14 +1,12 @@
 "use client";
-
-import { useFormState } from "react-dom";
-
 import { type BlogFormState, upsertBlogPost } from "./actions";
 import { SaveButton } from "./SaveButton";
+import { useActionState } from "react";
 
 const INITIAL_STATE: BlogFormState = {};
 
 export function CreateBlogPostForm() {
-  const [state, formAction] = useFormState(upsertBlogPost, INITIAL_STATE);
+  const [state, formAction] = useActionState(upsertBlogPost, INITIAL_STATE);
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">

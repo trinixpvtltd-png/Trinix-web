@@ -1,14 +1,12 @@
 "use client";
-
-import { useFormState } from "react-dom";
-
-import { type JobFormState, upsertJob } from "./actions";
+import { useActionState } from "react";
 import { SaveButton } from "../blog/SaveButton";
+import { type JobFormState, upsertJob } from "./actions";
 
 const INITIAL_STATE: JobFormState = {};
 
 export function CreateJobForm() {
-  const [state, formAction] = useFormState(upsertJob, INITIAL_STATE);
+  const [state, formAction] = useActionState(upsertJob, INITIAL_STATE);
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">

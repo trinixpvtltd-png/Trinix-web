@@ -1,14 +1,12 @@
 "use client";
-
-import { useFormState } from "react-dom";
-
 import { type ProjectFormState, upsertProject } from "./actions";
 import { SaveButton } from "../blog/SaveButton";
+import { useActionState } from "react";
 
 const INITIAL_STATE: ProjectFormState = {};
 
 export function CreateProjectForm() {
-  const [state, formAction] = useFormState(upsertProject, INITIAL_STATE);
+  const [state, formAction] = useActionState(upsertProject, INITIAL_STATE);
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">

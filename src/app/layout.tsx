@@ -2,9 +2,12 @@ import type { Metadata } from "next";
 import { Inter, Poppins } from "next/font/google";
 import { Footer } from "@/components/Footer";
 import { Navbar } from "@/components/Navbar";
-import { ChatBot } from "@/components/ChatBot";
+import  ChatBot  from "@/components/ChatBot";
 import { CanvasStage } from "@/components/three/CanvasStage";
 import { SceneRouter } from "@/components/three/SceneRouter";
+import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
+import { extractRouterConfig } from "uploadthing/server";
+import { uploadRouter } from "@/app/api/uploadthing/core";
 import "./globals.css";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
@@ -26,7 +29,8 @@ export default function RootLayout({
 }>) {
   return (
     <html lang="en" suppressHydrationWarning>
-      <body className={`${inter.variable} ${poppins.variable} antialiased bg-cosmic-black/80 text-slate-100`}>
+      <body suppressHydrationWarning className={`${inter.variable} ${poppins.variable} antialiased bg-cosmic-black/80 text-slate-100`}>
+         <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
         <CanvasStage>
           <SceneRouter />
         </CanvasStage>

@@ -3,20 +3,28 @@
 import { revalidatePath } from "next/cache";
 import { redirect } from "next/navigation";
 import { z } from "zod";
+import { UTApi } from "uploadthing/server";
 
 import { getAdminSession } from "@/server/auth/guards";
 import { appendAuditEntry } from "@/server/data/auditLog";
-import { updateResearchCatalogue } from "@/server/data/researchStore";
-import type { ResearchCatalogue } from "@/server/data/researchStore";
+import {
+  upsertResearch,
+  deleteResearch,
+  getResearch,
+} from "@/server/data/researchStore";
 
-type CatalogueArrays = Required<ResearchCatalogue>;
-type PublishedEntry = CatalogueArrays["published"][number];
-type PreprintEntry = CatalogueArrays["preprints"][number];
-type OngoingEntry = CatalogueArrays["ongoing"][number];
+const utapi = new UTApi();
 
+export type ResearchFormState = {
+  message?: string;
+  errors?: Record<string, string>;
+};
+
+// ------------------------------------------------------------
+// 🔹 Zod Validation Schema
+// ------------------------------------------------------------
 const baseSchema = z.object({
   collection: z.enum(["published", "preprints", "ongoing"]),
-  originalId: z.string().optional(),
   id: z.string().min(1, "ID is required"),
   title: z.string().min(1, "Title is required"),
   authors: z.string().optional(),
@@ -34,53 +42,79 @@ const baseSchema = z.object({
   eta: z.string().optional(),
 });
 
-export type ResearchFormState = {
-  message?: string;
-  errors?: Record<string, string>;
-};
-
-class ConflictError extends Error {
-  constructor(public readonly field: string, message: string) {
-    super(message);
-  }
-}
-
-class NotFoundError extends Error {}
-
+// Helper: Parse line-separated lists into arrays
 function parseList(value?: string | null): string[] | undefined {
   if (!value) return undefined;
   const items = value
     .split(/\r?\n/)
     .map((line) => line.trim())
-    .filter((line) => line.length > 0);
+    .filter(Boolean);
   return items.length ? items : undefined;
 }
 
-function cloneCatalogue(catalogue: ResearchCatalogue): Required<ResearchCatalogue> {
-  return {
-    published: [...(catalogue.published ?? [])],
-    preprints: [...(catalogue.preprints ?? [])],
-    ongoing: [...(catalogue.ongoing ?? [])],
-  };
-}
-
-export async function upsertResearchEntry(prevState: ResearchFormState, formData: FormData): Promise<ResearchFormState> {
+// ------------------------------------------------------------
+// 🔹 UPSERT: Create or update Firestore entry
+// ------------------------------------------------------------
+export async function upsertResearchEntry(
+  prevState: ResearchFormState,
+  formData: FormData
+): Promise<ResearchFormState> {
   const session = await getAdminSession();
-  if (!session) {
-    return { message: "Unauthorized" };
-  }
+  if (!session) return { message: "Unauthorized" };
+
   const userId =
     (session.user as { id?: string } | undefined)?.id ??
     (session as unknown as { userId?: string }).userId ??
     session.user?.email ??
     "admin";
 
+  const collection = formData.get("collection")?.toString() ?? "";
+  const id = formData.get("id")?.toString() ?? "";
+
+  // 1️⃣ Fetch existing document first (for replacement logic)
+  const existing = await getResearch(collection as any, id);
+
+  // 2️⃣ Upload new file if provided
+  const pdfFile = formData.get("pdfFile") as File | null;
+  let uploadedPdfUrl: string | undefined;
+  let deletedFileKey: string | null = null;
+
+  if (pdfFile && pdfFile.size > 0) {
+    try {
+      const uploaded = await utapi.uploadFiles([pdfFile]);
+      const fileData = uploaded?.[0]?.data;
+
+      if (fileData?.ufsUrl) {
+        uploadedPdfUrl = fileData.ufsUrl;
+
+        // 🗑️ Delete old UploadThing file if one existed
+        if ((existing as any)?.pdf) {
+          const oldKey = (existing as any).pdf.split("/f/")[1];
+          if (oldKey) {
+            try {
+              await utapi.deleteFiles([oldKey]);
+              deletedFileKey = oldKey;
+              console.log(`🗑️ Deleted old UploadThing PDF: ${oldKey}`);
+            } catch (err) {
+              console.warn("⚠️ Failed to delete old UploadThing file:", err);
+            }
+          }
+        }
+      } else {
+        return { message: "Failed to get uploaded file URL." };
+      }
+    } catch (err) {
+      console.error("❌ UploadThing upload failed:", err);
+      return { message: "Failed to upload PDF file." };
+    }
+  }
+
+  // 3️⃣ Validate form submission
   let submission: z.infer<typeof baseSchema>;
   try {
     submission = baseSchema.parse({
-      collection: formData.get("collection")?.toString(),
-      originalId: formData.get("originalId")?.toString(),
-      id: formData.get("id")?.toString(),
+      collection,
+      id,
       title: formData.get("title")?.toString(),
       authors: formData.get("authors")?.toString(),
       domain: formData.get("domain")?.toString(),
@@ -91,7 +125,7 @@ export async function upsertResearchEntry(prevState: ResearchFormState, formData
       identifier: formData.get("identifier")?.toString(),
       version_date: formData.get("version_date")?.toString(),
       abstract: formData.get("abstract")?.toString(),
-      pdf: formData.get("pdf")?.toString(),
+      pdf: uploadedPdfUrl ?? formData.get("pdf")?.toString(),
       modal: formData.get("modal")?.toString(),
       milestone_next: formData.get("milestone_next")?.toString(),
       eta: formData.get("eta")?.toString(),
@@ -101,168 +135,78 @@ export async function upsertResearchEntry(prevState: ResearchFormState, formData
       const errors: Record<string, string> = {};
       for (const issue of error.issues) {
         const key = issue.path[0];
-        if (typeof key === "string") {
-          errors[key] = issue.message;
-        }
+        if (typeof key === "string") errors[key] = issue.message;
       }
-      return { errors };
+      return { errors, message: "Validation failed." };
     }
-    return { message: "Invalid submission" };
+    return { message: "Invalid submission." };
   }
 
+  // 4️⃣ Prepare Firestore payload
   const authors = parseList(submission.authors);
   const domain = parseList(submission.domain);
 
-  let modalObject: unknown;
-  if (submission.collection === "preprints" && submission.modal && submission.modal.trim().length) {
+  let modal: any;
+  if (submission.modal) {
     try {
-      modalObject = JSON.parse(submission.modal);
-    } catch (error) {
-      return { errors: { modal: error instanceof Error ? error.message : "Modal JSON is invalid" } };
+      modal = JSON.parse(submission.modal);
+    } catch {
+      return { errors: { modal: "Invalid JSON in modal." } };
     }
   }
 
-  if (submission.collection === "published" && !submission.venue?.trim()) {
-    return { errors: { venue: "Venue is required" } };
-  }
-  if (submission.collection === "preprints" && !submission.server?.trim()) {
-    return { errors: { server: "Server is required" } };
-  }
-
-  const targetId = submission.originalId?.trim().length ? submission.originalId : submission.id;
-  let result: {
-    resource: string;
-    action: "create" | "update";
-    before?: PublishedEntry | PreprintEntry | OngoingEntry;
-    after: PublishedEntry | PreprintEntry | OngoingEntry;
-  };
-
+  // 5️⃣ Write to Firestore
   try {
-    result = await updateResearchCatalogue((catalogue) => {
-      const working = cloneCatalogue(catalogue);
-      const resource = `research-${submission.collection}`;
-
-      switch (submission.collection) {
-        case "published": {
-          const list = working.published;
-          const existingIndex = list.findIndex((entry) => entry.id === targetId);
-          const duplicate = list.some((entry, index) => entry.id === submission.id && index !== existingIndex);
-          if (duplicate) {
-            throw new ConflictError("id", "Another entry already uses this ID");
-          }
-
-          const nextEntry: PublishedEntry = {
-            id: submission.id,
-            title: submission.title,
-            authors,
-            venue: submission.venue?.trim() ?? "",
-            doi: submission.doi?.trim() || undefined,
-            open_access: submission.open_access ? submission.open_access === "on" : undefined,
-            domain,
-          };
-
-          const action: "create" | "update" = existingIndex === -1 ? "create" : "update";
-          const before = existingIndex === -1 ? undefined : list[existingIndex];
-          if (existingIndex === -1) {
-            list.unshift(nextEntry);
-          } else {
-            list[existingIndex] = nextEntry;
-          }
-
-          return { data: working, result: { resource, action, before, after: nextEntry } };
-        }
-        case "preprints": {
-          const list = working.preprints;
-          const existingIndex = list.findIndex((entry) => entry.id === targetId);
-          const duplicate = list.some((entry, index) => entry.id === submission.id && index !== existingIndex);
-          if (duplicate) {
-            throw new ConflictError("id", "Another entry already uses this ID");
-          }
-
-          const nextEntry: PreprintEntry = {
-            id: submission.id,
-            title: submission.title,
-            authors,
-            server: submission.server?.trim() ?? "",
-            identifier: submission.identifier?.trim() || undefined,
-            version_date: submission.version_date?.trim() || undefined,
-            abstract: submission.abstract?.trim() || undefined,
-            pdf: submission.pdf?.trim() || undefined,
-            domain,
-            modal: modalObject as PreprintEntry["modal"],
-          };
-
-          const action: "create" | "update" = existingIndex === -1 ? "create" : "update";
-          const before = existingIndex === -1 ? undefined : list[existingIndex];
-          if (existingIndex === -1) {
-            list.unshift(nextEntry);
-          } else {
-            list[existingIndex] = nextEntry;
-          }
-
-          return { data: working, result: { resource, action, before, after: nextEntry } };
-        }
-        case "ongoing": {
-          const list = working.ongoing;
-          const existingIndex = list.findIndex((entry) => entry.id === targetId);
-          const duplicate = list.some((entry, index) => entry.id === submission.id && index !== existingIndex);
-          if (duplicate) {
-            throw new ConflictError("id", "Another entry already uses this ID");
-          }
-
-          const nextEntry: OngoingEntry = {
-            id: submission.id,
-            title: submission.title,
-            milestone_next: submission.milestone_next?.trim() || undefined,
-            eta: submission.eta?.trim() || undefined,
-          };
-
-          const action: "create" | "update" = existingIndex === -1 ? "create" : "update";
-          const before = existingIndex === -1 ? undefined : list[existingIndex];
-          if (existingIndex === -1) {
-            list.unshift(nextEntry);
-          } else {
-            list[existingIndex] = nextEntry;
-          }
-
-          return { data: working, result: { resource, action, before, after: nextEntry } };
-        }
-        default:
-          throw new Error("Unsupported collection");
-      }
+    const saved = await upsertResearch(submission.collection, {
+      ...submission,
+      authors,
+      domain,
+      open_access:
+        submission.open_access === "on" || submission.open_access === "true",
+      modal,
     });
+
+    // Log audit (include deleted file key if applicable)
+    await appendAuditEntry({
+      resource: `research-${submission.collection}`,
+      action: existing ? "update" : "create",
+      userId,
+      before: existing ?? null,
+      after: saved,
+    });
+
+    revalidatePath("/admin/research");
+    revalidatePath("/research");
+    revalidatePath("/");
+
+    redirect(
+      `/admin/research?updated=${encodeURIComponent(
+        `${submission.collection}:${submission.id}`
+      )}${deletedFileKey ? `&replaced=${deletedFileKey}` : ""}`
+    );
   } catch (error) {
-    if (error instanceof ConflictError) {
-      return { errors: { [error.field]: error.message } };
-    }
-    throw error;
+    if ((error as Error).message?.includes("NEXT_REDIRECT")) throw error;
+
+    console.error("Firestore write failed:", error);
+    return { message: "Failed to save entry." };
   }
-
-  await appendAuditEntry({
-    resource: result.resource,
-    action: result.action,
-    userId,
-    before: result.before,
-    after: result.after,
-  });
-
-  revalidatePath("/admin/research");
-  revalidatePath("/research");
-  revalidatePath("/");
-
-  redirect(`/admin/research?updated=${encodeURIComponent(`${submission.collection}:${submission.id}`)}`);
 }
 
+// ------------------------------------------------------------
+// 🔹 DELETE: Remove Firestore entry + uploaded PDF
+// ------------------------------------------------------------
 const deleteSchema = z.object({
   collection: z.enum(["published", "preprints", "ongoing"]),
   id: z.string().min(1, "ID is required"),
 });
 
-export async function deleteResearchEntry(prevState: ResearchFormState, formData: FormData): Promise<ResearchFormState> {
+export async function deleteResearchEntry(
+  prevState: ResearchFormState,
+  formData: FormData
+): Promise<ResearchFormState> {
   const session = await getAdminSession();
-  if (!session) {
-    return { message: "Unauthorized" };
-  }
+  if (!session) return { message: "Unauthorized" };
+
   const userId =
     (session.user as { id?: string } | undefined)?.id ??
     (session as unknown as { userId?: string }).userId ??
@@ -274,40 +218,53 @@ export async function deleteResearchEntry(prevState: ResearchFormState, formData
     id: formData.get("id")?.toString(),
   });
 
-  if (!submission.success) {
-    return { message: "Invalid request" };
-  }
+  if (!submission.success) return { message: "Invalid request." };
 
-  let removed: PublishedEntry | PreprintEntry | OngoingEntry | null = null;
   try {
-    removed = await updateResearchCatalogue((catalogue) => {
-      const working = cloneCatalogue(catalogue);
-      const list = working[submission.data.collection];
-      const index = list.findIndex((entry) => entry.id === submission.data.id);
-      if (index === -1) {
-        throw new NotFoundError("Entry not found");
+    const existing = await getResearch(
+      submission.data.collection,
+      submission.data.id
+    );
+
+    // 🗑️ Delete PDF from UploadThing if exists
+    if ((existing as any)?.pdf) {
+      try {
+        const fileKey = (existing as any).pdf.split("/f/")[1];
+        if (fileKey) {
+          await utapi.deleteFiles([fileKey]);
+          console.log(`🗑️ Deleted UploadThing PDF (on delete): ${fileKey}`);
+        }
+      } catch (err) {
+        console.warn("⚠️ Failed to delete PDF from UploadThing:", err);
       }
-      const [deleted] = list.splice(index, 1);
-      return { data: working, result: deleted };
-    });
-  } catch (error) {
-    if (error instanceof NotFoundError) {
-      return { message: error.message };
     }
-    throw error;
+
+    // Delete from Firestore
+    await deleteResearch(submission.data.collection, submission.data.id);
+
+    // Audit log
+    await appendAuditEntry({
+      resource: `research-${submission.data.collection}`,
+      action: "delete",
+      userId,
+      before: existing,
+      after: null,
+    });
+
+    revalidatePath("/admin/research");
+    revalidatePath("/research");
+    revalidatePath("/");
+
+    redirect(
+      `/admin/research?deleted=${encodeURIComponent(
+        `${submission.data.collection}:${submission.data.id}`
+      )}`
+    );
+  } catch (error) {
+    if ((error as Error).message?.includes("NEXT_REDIRECT")) throw error;
+
+    console.error("Delete failed:", error);
+    return { message: "Failed to delete entry." };
   }
-
-  await appendAuditEntry({
-    resource: `research-${submission.data.collection}`,
-    action: "delete",
-    userId,
-    before: removed,
-    after: null,
-  });
-
-  revalidatePath("/admin/research");
-  revalidatePath("/research");
-  revalidatePath("/");
-
-  redirect(`/admin/research?deleted=${encodeURIComponent(`${submission.data.collection}:${submission.data.id}`)}`);
 }
+

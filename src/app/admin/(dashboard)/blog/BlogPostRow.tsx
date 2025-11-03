@@ -1,10 +1,6 @@
 "use client";
-
-import { useState } from "react";
-import { useFormState } from "react-dom";
-
+import { useActionState, useState } from "react";
 import type { BlogPost } from "@/data/blogPosts";
-
 import { type BlogFormState, deleteBlogPost, upsertBlogPost } from "./actions";
 import { SaveButton } from "./SaveButton";
 
@@ -17,8 +13,8 @@ type Props = {
 
 export function BlogPostRow({ post, formattedDate }: Props) {
   const [isEditing, setIsEditing] = useState(false);
-  const [updateState, updateAction] = useFormState(upsertBlogPost, INITIAL_STATE);
-  const [deleteState, deleteAction] = useFormState(deleteBlogPost, INITIAL_STATE);
+  const [updateState, updateAction] = useActionState(upsertBlogPost, INITIAL_STATE);
+  const [deleteState, deleteAction] = useActionState(deleteBlogPost, INITIAL_STATE);
 
   const draftDate = post.published_at?.slice(0, 10) ?? "";
   const publicationDate = post.publication_date?.slice(0, 10) ?? "";
@@ -26,13 +22,42 @@ export function BlogPostRow({ post, formattedDate }: Props) {
 
   return (
     <>
+      {/* 🧱 Non-editing table row */}
       <tr className="hover:bg-white/5">
-        <td className="px-4 py-4 font-medium text-white">{post.title}</td>
-        <td className="px-4 py-4 text-white/70">{post.author || "—"}</td>
-        <td className="px-4 py-4">{formattedDate}</td>
-        <td className="px-4 py-4 text-white/70">{post.estimated_read_duration || "—"}</td>
-        <td className="px-4 py-4 text-white/60">{post.blurb}</td>
-        <td className="px-4 py-4 text-right">
+        {/* Title */}
+        <td
+          className="px-4 py-4 max-w-[240px] truncate font-medium text-white align-top"
+          title={post.title}
+        >
+          {post.title}
+        </td>
+
+        {/* Author */}
+        <td
+          className="px-4 py-4 max-w-[140px] truncate text-white/70 align-top"
+          title={post.author || "—"}
+        >
+          {post.author || "—"}
+        </td>
+
+        {/* Date */}
+        <td className="px-4 py-4 whitespace-nowrap align-top">{formattedDate}</td>
+
+        {/* Duration */}
+        <td className="px-4 py-4 text-white/70 whitespace-nowrap align-top">
+          {post.estimated_read_duration || "—"}
+        </td>
+
+        {/* Blurb */}
+        <td
+          className="px-4 py-4 max-w-[300px] truncate text-white/60 align-top"
+          title={post.blurb}
+        >
+          {post.blurb}
+        </td>
+
+        {/* Edit Button */}
+        <td className="px-4 py-4 text-right align-top">
           <button
             type="button"
             onClick={() => setIsEditing((prev) => !prev)}
@@ -42,6 +67,8 @@ export function BlogPostRow({ post, formattedDate }: Props) {
           </button>
         </td>
       </tr>
+
+      {/* ✏️ Editing section */}
       {isEditing ? (
         <tr className="bg-black/40">
           <td colSpan={6} className="px-4 py-6">
@@ -49,8 +76,12 @@ export function BlogPostRow({ post, formattedDate }: Props) {
               <form action={updateAction} className="grid gap-4 md:grid-cols-2">
                 <input type="hidden" name="originalSlug" value={post.slug} />
 
+                {/* Title */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`title-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`title-${post.slug}`}
+                  >
                     Title
                   </label>
                   <input
@@ -60,11 +91,19 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                     className="mt-1 w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
                     required
                   />
-                  {updateState.errors?.title ? <p className="mt-1 text-xs text-aurora-rose">{updateState.errors.title}</p> : null}
+                  {updateState.errors?.title ? (
+                    <p className="mt-1 text-xs text-aurora-rose">
+                      {updateState.errors.title}
+                    </p>
+                  ) : null}
                 </div>
 
+                {/* Slug */}
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`slug-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`slug-${post.slug}`}
+                  >
                     Slug
                   </label>
                   <input
@@ -73,11 +112,19 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                     defaultValue={post.slug}
                     className="mt-1 w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
                   />
-                  {updateState.errors?.slug ? <p className="mt-1 text-xs text-aurora-rose">{updateState.errors.slug}</p> : null}
+                  {updateState.errors?.slug ? (
+                    <p className="mt-1 text-xs text-aurora-rose">
+                      {updateState.errors.slug}
+                    </p>
+                  ) : null}
                 </div>
 
+                {/* Author */}
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`author-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`author-${post.slug}`}
+                  >
                     Author
                   </label>
                   <input
@@ -88,8 +135,12 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                   />
                 </div>
 
+                {/* Published Date */}
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`published-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`published-${post.slug}`}
+                  >
                     Published
                   </label>
                   <input
@@ -101,8 +152,12 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                   />
                 </div>
 
+                {/* Publication Date */}
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`publication-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`publication-${post.slug}`}
+                  >
                     Publication Date
                   </label>
                   <input
@@ -114,8 +169,12 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                   />
                 </div>
 
+                {/* Read Duration */}
                 <div>
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`read-duration-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`read-duration-${post.slug}`}
+                  >
                     Read Duration
                   </label>
                   <input
@@ -127,8 +186,12 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                   />
                 </div>
 
+                {/* Description Points */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`description-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`description-${post.slug}`}
+                  >
                     Description Points
                   </label>
                   <p className="mt-1 text-xs text-white/50">
@@ -146,12 +209,18 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                     ))}
                   </div>
                   {updateState.errors?.description_points ? (
-                    <p className="mt-1 text-xs text-aurora-rose">{updateState.errors.description_points}</p>
+                    <p className="mt-1 text-xs text-aurora-rose">
+                      {updateState.errors.description_points}
+                    </p>
                   ) : null}
                 </div>
 
+                {/* Blurb */}
                 <div className="md:col-span-2">
-                  <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor={`blurb-${post.slug}`}>
+                  <label
+                    className="block text-xs uppercase tracking-[0.2em] text-white/60"
+                    htmlFor={`blurb-${post.slug}`}
+                  >
                     Excerpt
                   </label>
                   <textarea
@@ -162,11 +231,21 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                     className="mt-1 w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
                     required
                   />
-                  {updateState.errors?.blurb ? <p className="mt-1 text-xs text-aurora-rose">{updateState.errors.blurb}</p> : null}
+                  {updateState.errors?.blurb ? (
+                    <p className="mt-1 text-xs text-aurora-rose">
+                      {updateState.errors.blurb}
+                    </p>
+                  ) : null}
                 </div>
 
-                {updateState.message ? <p className="md:col-span-2 text-xs text-aurora-rose">{updateState.message}</p> : null}
+                {/* Form Errors */}
+                {updateState.message ? (
+                  <p className="md:col-span-2 text-xs text-aurora-rose">
+                    {updateState.message}
+                  </p>
+                ) : null}
 
+                {/* Buttons */}
                 <div className="md:col-span-2 flex justify-end gap-2">
                   <button
                     type="button"
@@ -179,6 +258,7 @@ export function BlogPostRow({ post, formattedDate }: Props) {
                 </div>
               </form>
 
+              {/* Delete Form */}
               <form
                 action={deleteAction}
                 className="flex items-center justify-between rounded-lg border border-white/10 bg-black/60 px-4 py-3"
@@ -190,14 +270,19 @@ export function BlogPostRow({ post, formattedDate }: Props) {
               >
                 <div>
                   <p className="text-sm text-white">Remove post</p>
-                  <p className="text-xs text-white/60">Deletes the entry from the public feed immediately.</p>
+                  <p className="text-xs text-white/60">
+                    Deletes the entry from the public feed immediately.
+                  </p>
                 </div>
                 <div>
                   <input type="hidden" name="slug" value={post.slug} />
                   <SaveButton label="Delete" pendingLabel="Deleting…" variant="danger" />
                 </div>
               </form>
-              {deleteState.message ? <p className="text-xs text-aurora-rose">{deleteState.message}</p> : null}
+
+              {deleteState.message ? (
+                <p className="text-xs text-aurora-rose">{deleteState.message}</p>
+              ) : null}
             </div>
           </td>
         </tr>

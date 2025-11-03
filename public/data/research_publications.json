@@ -107,30 +107,37 @@
   ],
   "ongoing": [
     {
-      "id": "ongoing-neural-finance",
-      "title": "Neural-Enhanced Financial Risk Assessment using Vedic Mathematical Principles",
-      "milestone_next": "Beta Testing Phase",
-      "descriptions": "We aim high"
-    },
-    {
-      "id": "ongoing-quantum-consciousness",
-      "title": "Quantum Computing Applications in Consciousness and Psychology Research",
-      "milestone_next": "Quantum Algorithm Development"
-    },
-    {
-      "id": "ongoing-vedic-ai-ethics",
-      "title": "Vedic Philosophy Framework for Ethical AI Development",
-      "milestone_next": "Ethics Framework Implementation"
-    },
-    {
-      "id": "ongoing-financial-blockchain",
-      "title": "Decentralized Financial Systems for Rural Economic Empowerment",
-      "milestone_next": "Pilot Program Launch"
-    },
-    {
-      "id": "ongoing-psychological-ai",
-      "title": "AI-Assisted Mental Health Intervention using Cultural Psychology Models",
-      "milestone_next": "Clinical Trial Preparation"
+      "id": "ongoing-navarasa-ai",
+      "title": "Navarasa Emotion Intelligence Framework: Cognitive and Computational Emotion Modeling",
+      "authors": ["Trinix Research Team"],
+      "server": "Ongoing Research (Trinix Research)",
+      "identifier": "TRX-NAVARASA-2025-OG",
+      "version_date": "2025-10-30",
+      "abstract": "This study presents an overview of the Navarasa emotion theory—Shringara (love), Hasya (joy), Karuna (compassion), Raudra (anger), Veera (courage), Bhayanaka (fear), Bibhatsa (disgust), Adbhuta (wonder), and Shanta (peace)—and proposes a cognitive-AI framework for emotion detection, simulation, and empathy modeling. The framework connects traditional rasa theory with affective neuroscience and computational psychology to construct a multi-dimensional emotion-AI model capable of understanding and generating emotional responses aligned with human affective states. It emphasizes dataset formation based on physiological, linguistic, and contextual markers; multimodal emotion analysis (voice, facial data, semantics); and reinforcement feedback loops for AI empathy and behavior regulation. The research further outlines the mapping of Navarasa categories into vector representations for use in deep learning and conversational agents.",
+      "pdf": "/ongoing/Overview of Navarasa.pdf",
+      "domain": ["AI", "Cognitive Science", "Affective Computing"],
+      "modal": {
+        "layout": "research-square",
+        "sections": {
+          "authors": true,
+          "abstract": true,
+          "pdf_viewer": true
+        },
+        "actions": [
+          {
+            "label": "Open PDF",
+            "href": "/ongoing/Overview of Navarasa.pdf",
+            "target": "_blank",
+            "variant": "primary"
+          },
+          {
+            "label": "Download",
+            "href": "/ongoing/Overview of Navarasa.pdf",
+            "download": true,
+            "variant": "secondary"
+          }
+        ]
+      }
     }
   ]
 }

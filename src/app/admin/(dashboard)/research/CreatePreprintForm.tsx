@@ -1,163 +1,187 @@
 "use client";
 
-import { useFormState } from "react-dom";
-
+import { useState } from "react";
+import { useActionState } from "react";
 import { SaveButton } from "../blog/SaveButton";
 import { type ResearchFormState, upsertResearchEntry } from "./actions";
 
 const INITIAL_STATE: ResearchFormState = {};
 
 export function CreatePreprintForm() {
-  const [state, formAction] = useFormState(upsertResearchEntry, INITIAL_STATE);
+  const [state, formAction] = useActionState(upsertResearchEntry, INITIAL_STATE);
+  const [file, setFile] = useState<File | null>(null);
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">
       <div className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
         <div>
           <h2 className="font-display text-lg font-semibold text-white">Add Preprint</h2>
-          <p className="text-sm text-white/70">Stage forthcoming research with abstracts, PDFs, and modal metadata.</p>
+          <p className="text-sm text-white/70">
+            Stage forthcoming research with abstracts, PDFs, and modal metadata.
+          </p>
         </div>
-        <p className="text-xs text-white/50">Modal accepts JSON matching the public modal schema.</p>
       </div>
 
-      <form action={formAction} className="mt-6 grid gap-4 md:grid-cols-2">
+      <form
+        action={async (formData) => {
+          if (file) formData.append("pdfFile", file);
+          await formAction(formData);
+        }}
+        className="mt-6 grid gap-4 md:grid-cols-2"
+      >
         <input type="hidden" name="collection" value="preprints" />
 
+        {/* Title */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-title">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Title
           </label>
           <input
-            id="pre-title"
             name="title"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
-            placeholder="Preprint title"
             required
+            placeholder="Preprint title"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
-          {state.errors?.title ? <p className="mt-1 text-xs text-aurora-rose">{state.errors.title}</p> : null}
         </div>
 
+        {/* Identifier */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-id">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Identifier
           </label>
           <input
-            id="pre-id"
             name="id"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
-            placeholder="Unique ID"
             required
+            placeholder="Unique ID"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
-          {state.errors?.id ? <p className="mt-1 text-xs text-aurora-rose">{state.errors.id}</p> : null}
         </div>
 
+        {/* Server */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-server">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Server
           </label>
           <input
-            id="pre-server"
             name="server"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
-            placeholder="ArXiv, Trinix Research, etc"
             required
+            placeholder="ArXiv, Trinix Research, etc"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
-          {state.errors?.server ? <p className="mt-1 text-xs text-aurora-rose">{state.errors.server}</p> : null}
         </div>
 
+        {/* External Identifier */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-identifier">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             External Identifier
           </label>
           <input
-            id="pre-identifier"
             name="identifier"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
             placeholder="TRX-2025-01"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
         </div>
 
+        {/* Version Date */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-date">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Version Date
           </label>
           <input
-            id="pre-date"
             name="version_date"
             type="date"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
         </div>
 
-        <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-pdf">
-            PDF Path / URL
+        {/* PDF Upload (UploadThing via server action) */}
+        <div className="md:col-span-2">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
+            Upload Preprint PDF
           </label>
           <input
-            id="pre-pdf"
-            name="pdf"
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
-            placeholder="/preprints/example.pdf"
+            type="file"
+            name="pdfFile"
+            accept="application/pdf"
+            required
+            onChange={(e) => setFile(e.target.files?.[0] || null)}
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white file:mr-3 file:rounded-lg file:border-0 file:bg-white/10 file:px-3 file:py-1 file:text-white file:hover:bg-white/20 cursor-pointer"
           />
+          {file && (
+            <p className="text-xs text-white/50 mt-1">
+              Selected: {file.name} ({(file.size / 1024 / 1024).toFixed(2)} MB)
+            </p>
+          )}
         </div>
 
+        {/* Abstract */}
         <div className="md:col-span-2">
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-abstract">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Abstract
           </label>
           <textarea
-            id="pre-abstract"
             name="abstract"
             rows={4}
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
             placeholder="Key findings and context"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
         </div>
 
+        {/* Authors */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-authors">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Authors
           </label>
           <textarea
-            id="pre-authors"
             name="authors"
             rows={3}
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
             placeholder="One author per line"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
         </div>
 
+        {/* Domains */}
         <div>
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-domain">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Domains
           </label>
           <textarea
-            id="pre-domain"
             name="domain"
             rows={3}
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none transition focus:border-aurora-teal/60"
-            placeholder="AI"
+            placeholder="AI, Physics, Cognitive Science"
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
           />
         </div>
 
+        {/* Modal JSON */}
         <div className="md:col-span-2">
-          <label className="block text-xs uppercase tracking-[0.2em] text-white/60" htmlFor="pre-modal">
+          <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
             Modal JSON
           </label>
           <textarea
-            id="pre-modal"
             name="modal"
             rows={4}
-            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 font-mono text-xs text-white outline-none transition focus:border-aurora-teal/60"
-            placeholder='{"layout":"research-square"}'
+            placeholder='{"layout":"research-square","pdf":"<url>"}'
+            className="mt-1 w-full rounded-lg border border-white/10 bg-black/40 px-3 py-2 font-mono text-xs text-white outline-none focus:border-aurora-teal/60"
           />
-          {state.errors?.modal ? <p className="mt-1 text-xs text-aurora-rose">{state.errors.modal}</p> : null}
         </div>
 
-        {state.message ? <p className="md:col-span-2 text-xs text-aurora-rose">{state.message}</p> : null}
+        {/* Message */}
+        {state.message && (
+          <p
+            className={`md:col-span-2 text-xs ${
+              state.message.startsWith("✅")
+                ? "text-green-400"
+                : "text-aurora-rose"
+            }`}
+          >
+            {state.message}
+          </p>
+        )}
 
+        {/* Submit */}
         <div className="md:col-span-2 flex justify-end">
-          <SaveButton label="Create Preprint" pendingLabel="Saving…" />
+          <SaveButton label="Create Preprint" pendingLabel="Uploading…" />
         </div>
       </form>
     </section>

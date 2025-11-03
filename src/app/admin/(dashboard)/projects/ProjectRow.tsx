@@ -1,7 +1,6 @@
 "use client";
 
-import { useState } from "react";
-import { useFormState } from "react-dom";
+import { useActionState, useState } from "react";
 
 import type { Project } from "@/types/content";
 
@@ -25,8 +24,8 @@ function joinCtas(ctas?: Project["ctas"]): string {
 
 export function ProjectRow({ project }: Props) {
   const [isEditing, setIsEditing] = useState(false);
-  const [updateState, updateAction] = useFormState(upsertProject, INITIAL_STATE);
-  const [deleteState, deleteAction] = useFormState(deleteProject, INITIAL_STATE);
+  const [updateState, updateAction] = useActionState(upsertProject, INITIAL_STATE);
+  const [deleteState, deleteAction] = useActionState(deleteProject, INITIAL_STATE);
 
   return (
     <>

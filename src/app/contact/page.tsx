@@ -3,6 +3,7 @@
 import { motion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
+import { MapPin, Phone, Mail } from "lucide-react"; // ✅ Lucide icons
 
 type ContactFormState = {
   fullName: string;
@@ -41,20 +42,21 @@ function ContactSection() {
     return () => window.clearTimeout(id);
   }, [toast]);
 
+  // ✅ Icons pulse + glow
   const infoBlocks = useMemo(
     () => [
       {
-        icon: "📍",
+        icon: <GlowIcon icon={<MapPin className="h-6 w-6" />} />,
         title: "Our Headquarters",
         lines: ["FF-110, Harsha Mall, Commercial Belt, Alpha-1, Greater Noida, Uttar Pradesh, India, 201310"],
       },
       {
-        icon: "📞",
+        icon: <GlowIcon icon={<Phone className="h-6 w-6" />} />,
         title: "Sales & Support",
         lines: ["+91 8006464222"],
       },
       {
-        icon: "✉️",
+        icon: <GlowIcon icon={<Mail className="h-6 w-6" />} />,
         title: "Email",
         lines: ["info@trinix.org.in"],
       },
@@ -119,8 +121,9 @@ function ContactSection() {
       transition={{ duration: 0.6 }}
     >
       <div className="space-y-4">
-  <p className="text-xs uppercase tracking-[0.35em] text-aurora-teal/80">Let&apos;s Connect</p>
+        <p className="text-xs uppercase tracking-[0.35em] text-aurora-teal/80">Let&apos;s Connect</p>
         <div className="grid gap-10 lg:grid-cols-[1.05fr_1fr]">
+          {/* Left side */}
           <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-xl">
             <h1 id="contact-heading" className="font-display text-3xl font-semibold text-white">
               Let&apos;s Connect
@@ -129,101 +132,81 @@ function ContactSection() {
               Ready to transform your business? Let&apos;s start a conversation about your next project and explore how our expertise can
               help you achieve your technological goals.
             </p>
+
             <div className="mt-8 space-y-6">
               {infoBlocks.map((block) => (
-                <div key={block.title} className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl shadow-lg">
-                  <div className="text-2xl" aria-hidden="true">
-                    {block.icon}
+                <div
+                  key={block.title}
+                  className="rounded-2xl border border-white/10 bg-white/5 p-4 backdrop-blur-xl shadow-lg flex flex-col sm:flex-row sm:items-start gap-4 hover:border-aurora-teal/40 transition"
+                >
+                  <div className="flex-shrink-0">{block.icon}</div>
+                  <div>
+                    <h2 className="text-lg font-semibold text-white">{block.title}</h2>
+                    <ul className="mt-1 space-y-1 text-sm text-white/70">
+                      {block.lines.map((line) => (
+                        <li key={`${block.title}-${line}`}>{line}</li>
+                      ))}
+                    </ul>
                   </div>
-                  <h2 className="mt-3 text-lg font-semibold text-white">{block.title}</h2>
-                  <ul className="mt-2 space-y-1 text-sm text-white/70">
-                    {block.lines.map((line) => (
-                      <li key={`${block.title}-${line}`}>{line}</li>
-                    ))}
-                  </ul>
                 </div>
               ))}
             </div>
+
             <p className="mt-8 text-xs uppercase tracking-[0.25em] text-white/60">
               We aim to respond to all inquiries within 24 hours.
             </p>
           </div>
 
+          {/* Right side (Form) */}
           <div className="rounded-2xl border border-white/10 bg-white/5 p-8 backdrop-blur-xl shadow-xl">
             <h2 className="text-2xl font-semibold text-white">Send us a message</h2>
+
             <form className="mt-6 space-y-5" onSubmit={handleSubmit} noValidate>
-              {toast ? (
+              {toast && (
                 <div
                   role="status"
                   aria-live={toast.type === "success" ? "polite" : "assertive"}
-                  className=
-                    {
-                      toast.type === "success"
-                        ? "rounded-md border border-aurora-teal/40 bg-aurora-teal/10 px-4 py-3 text-sm text-aurora-teal"
-                        : "rounded-md border border-red-400/50 bg-red-500/10 px-4 py-3 text-sm text-red-200"
-                    }
+                  className={
+                    toast.type === "success"
+                      ? "rounded-md border border-aurora-teal/40 bg-aurora-teal/10 px-4 py-3 text-sm text-aurora-teal"
+                      : "rounded-md border border-red-400/50 bg-red-500/10 px-4 py-3 text-sm text-red-200"
+                  }
                 >
                   {toast.message}
                 </div>
-              ) : null}
-              <div>
-                <label htmlFor="fullName" className="block text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
-                  Full Name *
-                </label>
-                <input
-                  id="fullName"
-                  name="fullName"
-                  type="text"
-                  required
-                  placeholder="Your full name"
-                  value={form.fullName}
-                  onChange={handleChange("fullName")}
-                  className="mt-2 w-full rounded-lg border border-white/15 bg-black/30 px-4 py-3 text-sm text-white placeholder-white/40 focus:border-aurora-teal/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
-                  aria-invalid={errors.fullName ? "true" : "false"}
-                  aria-describedby={errors.fullName ? "fullName-error" : undefined}
-                />
-                {errors.fullName ? (
-                  <p id="fullName-error" className="mt-1 text-xs text-red-300">
-                    {errors.fullName}
-                  </p>
-                ) : null}
-              </div>
-              <div>
-                <label htmlFor="email" className="block text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
-                  Email Address *
-                </label>
-                <input
-                  id="email"
-                  name="email"
-                  type="email"
-                  required
-                  placeholder="your.email@company.com"
-                  value={form.email}
-                  onChange={handleChange("email")}
-                  className="mt-2 w-full rounded-lg border border-white/15 bg-black/30 px-4 py-3 text-sm text-white placeholder-white/40 focus:border-aurora-teal/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
-                  aria-invalid={errors.email ? "true" : "false"}
-                  aria-describedby={errors.email ? "email-error" : undefined}
-                />
-                {errors.email ? (
-                  <p id="email-error" className="mt-1 text-xs text-red-300">
-                    {errors.email}
-                  </p>
-                ) : null}
-              </div>
-              <div>
-                <label htmlFor="company" className="block text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
-                  Company (Optional)
-                </label>
-                <input
-                  id="company"
-                  name="company"
-                  type="text"
-                  placeholder="Your company name"
-                  value={form.company}
-                  onChange={handleChange("company")}
-                  className="mt-2 w-full rounded-lg border border-white/15 bg-black/30 px-4 py-3 text-sm text-white placeholder-white/40 focus:border-aurora-teal/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
-                />
-              </div>
+              )}
+
+              {["fullName", "email", "company"].map((field) => (
+                <div key={field}>
+                  <label htmlFor={field} className="block text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
+                    {field === "fullName"
+                      ? "Full Name *"
+                      : field === "email"
+                      ? "Email Address *"
+                      : "Company (Optional)"}
+                  </label>
+                  <input
+                    id={field}
+                    name={field}
+                    type={field === "email" ? "email" : "text"}
+                    required={field !== "company"}
+                    placeholder={
+                      field === "email"
+                        ? "your.email@company.com"
+                        : field === "company"
+                        ? "Your company name"
+                        : "Your full name"
+                    }
+                    value={(form as any)[field]}
+                    onChange={handleChange(field as keyof ContactFormState)}
+                    className="mt-2 w-full rounded-lg border border-white/15 bg-black/30 px-4 py-3 text-sm text-white placeholder-white/40 focus:border-aurora-teal/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
+                  />
+                  {errors[field as keyof ContactFormState] && (
+                    <p className="mt-1 text-xs text-red-300">{errors[field as keyof ContactFormState]}</p>
+                  )}
+                </div>
+              ))}
+
               <div>
                 <label htmlFor="message" className="block text-xs font-semibold uppercase tracking-[0.25em] text-white/70">
                   Your Message *
@@ -237,29 +220,69 @@ function ContactSection() {
                   value={form.message}
                   onChange={handleChange("message")}
                   className="mt-2 w-full rounded-lg border border-white/15 bg-black/30 px-4 py-3 text-sm text-white placeholder-white/40 focus:border-aurora-teal/60 focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60"
-                  aria-invalid={errors.message ? "true" : "false"}
-                  aria-describedby={errors.message ? "message-error" : undefined}
                 />
-                {errors.message ? (
-                  <p id="message-error" className="mt-1 text-xs text-red-300">
-                    {errors.message}
-                  </p>
-                ) : null}
+                {errors.message && <p className="mt-1 text-xs text-red-300">{errors.message}</p>}
               </div>
+
               <div className="flex justify-end">
-                <button
-                  type="submit"
-                  className="inline-flex items-center gap-2 rounded-md border border-aurora-teal/60 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60 disabled:cursor-not-allowed disabled:border-white/20 disabled:text-white/60"
-                  disabled={submitting}
-                >
-                  {submitting ? "Sending..." : "Send Message"}
-                </button>
+                <GlowButton submitting={submitting} />
               </div>
             </form>
           </div>
         </div>
       </div>
     </motion.section>
+  );
+}
+
+
+function GlowIcon({ icon }: { icon: React.ReactNode }) {
+  return (
+    <motion.div
+      initial={{ scale: 1, filter: "drop-shadow(0 0 4px rgba(61,245,242,0.3))" }}
+      animate={{
+        scale: [1, 1.05, 1],
+        filter: [
+          "drop-shadow(0 0 4px rgba(61,245,242,0.3))",
+          "drop-shadow(0 0 10px rgba(61,245,242,0.6))",
+          "drop-shadow(0 0 4px rgba(61,245,242,0.3))",
+        ],
+      }}
+      transition={{ duration: 3, repeat: Infinity, ease: "easeInOut" }}
+      whileHover={{
+        scale: 1.2,
+        filter: "drop-shadow(0 0 12px rgba(61,245,242,0.9))",
+      }}
+      className="text-aurora-teal"
+    >
+      {icon}
+    </motion.div>
+  );
+}
+
+function GlowButton({ submitting }: { submitting: boolean }) {
+  return (
+    <motion.button
+      type="submit"
+      disabled={submitting}
+      initial={{ scale: 1, boxShadow: "0 0 8px rgba(61,245,242,0.3)" }}
+      animate={{
+        scale: [1, 1.03, 1],
+        boxShadow: [
+          "0 0 8px rgba(61,245,242,0.3)",
+          "0 0 16px rgba(61,245,242,0.6)",
+          "0 0 8px rgba(61,245,242,0.3)",
+        ],
+      }}
+      transition={{ duration: 2.5, repeat: Infinity, ease: "easeInOut" }}
+      whileHover={{
+        scale: 1.08,
+        boxShadow: "0 0 24px rgba(61,245,242,0.9)",
+      }}
+      className="inline-flex items-center gap-2 rounded-md border border-aurora-teal/60 bg-black/40 px-5 py-2 text-xs font-semibold uppercase tracking-[0.3em] text-white transition hover:border-white focus:outline-none focus-visible:ring-2 focus-visible:ring-aurora-teal/60 disabled:cursor-not-allowed disabled:border-white/20 disabled:text-white/60 cursor-pointer"
+    >
+      {submitting ? "Sending..." : "Send Message"}
+    </motion.button>
   );
 }
 
@@ -279,3 +302,5 @@ function NeuralBackdrop() {
     </div>
   );
 }
+
+

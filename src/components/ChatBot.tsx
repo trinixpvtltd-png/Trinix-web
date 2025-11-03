@@ -1,8 +1,8 @@
-'use client';
+"use client";
 
 import { useEffect, useMemo, useRef, useState } from "react";
 import type { CSSProperties, KeyboardEvent } from "react";
-
+import { Bot, Send } from "lucide-react";
 import { sendChatMessage } from "@/lib/chatApi";
 
 type ChatMessage = {
@@ -14,455 +14,245 @@ type ChatMessage = {
 
 type StyleMap = Record<string, CSSProperties>;
 
-const PRIMARY_GRADIENT = "linear-gradient(135deg, rgba(61,245,242,0.92), rgba(146,114,255,0.95))";
-const ICON_SHADOW = "0 24px 48px rgba(8, 17, 36, 0.55)";
-const WINDOW_BACKGROUND = "rgba(7, 13, 34, 0.92)";
-const PANEL_BACKGROUND = "rgba(10, 18, 38, 0.9)";
-const BORDER_COLOR = "rgba(255, 255, 255, 0.12)";
-const INPUT_BACKGROUND = "rgba(5, 12, 30, 0.85)";
-const TEXT_PRIMARY = "rgba(226, 232, 240, 0.92)";
-const TEXT_MUTED = "rgba(148, 163, 184, 0.78)";
+const BORDER = "rgba(255,255,255,0.12)";
+const TEXT_PRIMARY = "rgba(255,255,255,0.92)";
+const TEXT_MUTED = "rgba(255,255,255,0.7)";
+const PANEL_BG = "rgba(255,255,255,0.08)";
+const BOT_BG = "rgba(255,255,255,0.1)";
+const USER_BG = "rgba(255,255,255,0.15)";
+const GLOW_TEAL = "rgba(61,245,242,0.6)";
+const GLOW_WHITE = "rgba(255,255,255,0.4)";
 
-const getBotResponse = (message: string): string => {
-  const lowerMessage = message.toLowerCase();
-
-  if (lowerMessage.includes("service") || lowerMessage.includes("what do you do")) {
-    return "We offer comprehensive technology solutions including Web Development, Mobile App Development, and Cloud Solutions. Would you like to know more about any specific service?";
-  }
-  if (lowerMessage.includes("contact") || lowerMessage.includes("reach")) {
-    return "You can reach us through our contact page or call us directly. Would you like me to help you get in touch with our team?";
-  }
-  if (lowerMessage.includes("price") || lowerMessage.includes("cost")) {
-    return "Our pricing varies based on project requirements. I'd be happy to connect you with our team for a personalized quote. Would you like to schedule a consultation?";
-  }
-  if (lowerMessage.includes("hello") || lowerMessage.includes("hi")) {
-    return "Hello! Welcome to Trinix. I'm here to help you learn more about our services and how we can help transform your business. What would you like to know?";
-  }
-  return "That's a great question! I'd love to connect you with one of our specialists who can provide detailed information. Would you like me to arrange a consultation for you?";
+const getBotResponse = (msg: string): string => {
+  const lower = msg.toLowerCase();
+  if (lower.includes("service")) return "We provide complete web, app, and cloud solutions at Trinix.";
+  if (lower.includes("contact")) return "You can reach us through our contact page or call our team directly.";
+  if (lower.includes("price")) return "Pricing depends on your project scope. We can connect you with our team for details.";
+  if (lower.includes("hello") || lower.includes("hi")) return "Hello! Welcome to Trinix Cosmos. How can I help you today?";
+  return "That’s a great question! I’ll help you connect with our team for more details.";
 };
 
-export function ChatBot() {
+export default function ChatBot() {
   const [isOpen, setIsOpen] = useState(false);
   const [messages, setMessages] = useState<ChatMessage[]>([
-    {
-      id: 1,
-      text: "Hi! I'm Trinix AI Assistant. How can I help you today?",
-      sender: "bot",
-      timestamp: new Date(),
-    },
+    { id: 1, text: "Hi! I'm Trinix AI Assistant. How can I help you today?", sender: "bot", timestamp: new Date() },
   ]);
   const [inputMessage, setInputMessage] = useState("");
   const [isTyping, setIsTyping] = useState(false);
   const messagesEndRef = useRef<HTMLDivElement | null>(null);
 
-  const scrollToBottom = () => {
-    messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
-  };
-
-  useEffect(() => {
-    scrollToBottom();
-  }, [messages]);
+  const scrollToBottom = () => messagesEndRef.current?.scrollIntoView({ behavior: "smooth" });
+  useEffect(() => scrollToBottom(), [messages]);
 
   useEffect(() => {
     const style = document.createElement("style");
     style.textContent = `
-      @keyframes typing {
-        0%, 60%, 100% { transform: translateY(0); opacity: 0.4; }
-        30% { transform: translateY(-10px); opacity: 1; }
-      }
-
-      .typing-dot-1 { animation-delay: 0ms; }
-      .typing-dot-2 { animation-delay: 200ms; }
-      .typing-dot-3 { animation-delay: 400ms; }
-
-      .chat-messages::-webkit-scrollbar {
-        width: 6px;
-      }
-
-      .chat-messages::-webkit-scrollbar-track {
-        background: rgba(12, 20, 38, 0.6);
-        border-radius: 3px;
-      }
-
-      .chat-messages::-webkit-scrollbar-thumb {
-        background: rgba(61, 245, 242, 0.35);
-        border-radius: 3px;
-      }
-
-      .chat-messages::-webkit-scrollbar-thumb:hover {
-        background: rgba(61, 245, 242, 0.55);
+      @keyframes auroraPulse {
+        0%, 100% { box-shadow: 0 0 14px ${GLOW_TEAL}, 0 0 26px ${GLOW_WHITE}; }
+        50% { box-shadow: 0 0 24px ${GLOW_TEAL}, 0 0 34px ${GLOW_WHITE}; }
       }
     `;
     document.head.appendChild(style);
-
-    return () => {
-      if (style.parentNode) {
-        style.parentNode.removeChild(style);
-      }
-    };
+    return () => style.remove();
   }, []);
 
   const styles = useMemo(() => {
     return {
-      chatBotContainer: {
+      container: {
         position: "fixed",
         bottom: "24px",
         right: "24px",
         zIndex: 1000,
-        fontFamily: "var(--font-inter, 'Inter', system-ui)",
+        fontFamily: "Inter, system-ui, sans-serif",
       },
-      chatIcon: {
-        width: "60px",
-        height: "60px",
+      iconButton: {
+        width: "62px",
+        height: "62px",
         borderRadius: "50%",
-        background: PRIMARY_GRADIENT,
-        color: "rgba(255,255,255,0.95)",
-        border: `1px solid ${BORDER_COLOR}`,
-        cursor: "pointer",
+        background: "rgba(255,255,255,0.08)",
+        border: `1px solid ${BORDER}`,
+        color: TEXT_PRIMARY,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "22px",
-        boxShadow: ICON_SHADOW,
-        transition: "transform 0.3s ease, box-shadow 0.3s ease",
-        transform: isOpen ? "scale(0.92)" : "scale(1)",
-        backdropFilter: "blur(12px)",
+        cursor: "pointer",
+        backdropFilter: "blur(10px)",
+        animation: "auroraPulse 4s ease-in-out infinite",
+        transition: "transform 0.25s ease",
       },
       chatWindow: {
         position: "absolute",
         bottom: "80px",
-        right: "0",
+        right: 0,
         width: "380px",
         height: "500px",
-        background: WINDOW_BACKGROUND,
-        borderRadius: "24px",
-        boxShadow: "0 35px 90px rgba(8, 17, 36, 0.65)",
-        border: `1px solid ${BORDER_COLOR}`,
         display: isOpen ? "flex" : "none",
         flexDirection: "column",
+        background: PANEL_BG,
+        borderRadius: "24px",
+        border: `1px solid ${BORDER}`,
+        backdropFilter: "blur(20px)",
         overflow: "hidden",
-        transform: isOpen ? "translateY(0) scale(1)" : "translateY(10px) scale(0.95)",
-        opacity: isOpen ? 1 : 0,
-        transition: "all 0.3s ease",
-        backdropFilter: "blur(18px)",
       },
-      chatHeader: {
-        background: PRIMARY_GRADIENT,
-        color: TEXT_PRIMARY,
-        padding: "20px 24px",
+      header: {
+        background: "linear-gradient(90deg, rgba(61,245,242,0.15), rgba(255,255,255,0.08))",
+        padding: "16px 20px",
         display: "flex",
         alignItems: "center",
         justifyContent: "space-between",
-        borderBottom: `1px solid ${BORDER_COLOR}`,
+        borderBottom: `1px solid ${BORDER}`,
+        color: TEXT_PRIMARY,
       },
-      headerInfo: {
-        display: "flex",
-        alignItems: "center",
-        gap: "12px",
-      },
-      botAvatar: {
+      headerLeft: { display: "flex", alignItems: "center", gap: "10px" },
+      botIcon: {
         width: "40px",
         height: "40px",
-        borderRadius: "14px",
-        background: "rgba(255, 255, 255, 0.16)",
+        borderRadius: "12px",
+        background: "rgba(255,255,255,0.08)",
+        border: `1px solid ${BORDER}`,
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        fontSize: "18px",
-        color: TEXT_PRIMARY,
+        animation: "auroraPulse 5s ease-in-out infinite",
       },
-      headerText: {
-        display: "flex",
-        flexDirection: "column",
-        color: TEXT_PRIMARY,
-      },
-      botName: {
-        fontWeight: 600,
-        fontSize: "16px",
-        marginBottom: "2px",
-      },
-      botStatus: {
-        fontSize: "12px",
-        color: "rgba(226, 232, 240, 0.72)",
-      },
-      closeButton: {
-        background: "none",
-        border: "none",
-        color: "rgba(255,255,255,0.8)",
-        fontSize: "24px",
-        cursor: "pointer",
-        padding: 0,
-        opacity: 0.8,
-        transition: "opacity 0.2s ease",
-      },
-      messagesContainer: {
+      messages: {
         flex: 1,
-        padding: "24px",
+        padding: "20px",
         overflowY: "auto",
         display: "flex",
         flexDirection: "column",
-        gap: "16px",
-        background: PANEL_BACKGROUND,
-        color: TEXT_MUTED,
+        gap: "12px",
+        color: TEXT_PRIMARY,
       },
       message: {
         maxWidth: "80%",
-        padding: "12px 16px",
-        borderRadius: "18px",
+        padding: "10px 14px",
+        borderRadius: "16px",
         fontSize: "14px",
         lineHeight: 1.5,
-        wordWrap: "break-word",
-        fontFamily: "var(--font-inter, 'Inter', system-ui)",
-        letterSpacing: "0.01em",
-      },
-      userMessage: {
-        background: PRIMARY_GRADIENT,
-        color: TEXT_PRIMARY,
-        alignSelf: "flex-end",
-        borderBottomRightRadius: "6px",
-        border: "1px solid rgba(255,255,255,0.18)",
-        boxShadow: "0 18px 38px rgba(61, 245, 242, 0.25)",
+        wordBreak: "break-word",
       },
       botMessage: {
-        background: "rgba(13, 22, 48, 0.85)",
+        background: BOT_BG,
+        border: `1px solid ${BORDER}`,
+        alignSelf: "flex-start",
         color: TEXT_MUTED,
-        alignSelf: "flex-start",
-        border: `1px solid ${BORDER_COLOR}`,
-        borderBottomLeftRadius: "6px",
-        boxShadow: "0 16px 34px rgba(8, 17, 36, 0.35)",
       },
-      typingIndicator: {
-        display: "flex",
-        alignItems: "center",
-        gap: "8px",
-        padding: "12px 16px",
-        background: "rgba(13, 22, 48, 0.68)",
-        border: `1px solid ${BORDER_COLOR}`,
-        borderRadius: "18px",
-        borderBottomLeftRadius: "6px",
-        alignSelf: "flex-start",
-        maxWidth: "90px",
-        boxShadow: "0 14px 30px rgba(8, 17, 36, 0.32)",
-      },
-      typingDot: {
-        width: "6px",
-        height: "6px",
-        borderRadius: "50%",
-        background: "rgba(96, 212, 210, 0.85)",
-        animation: "typing 1.4s infinite ease-in-out",
+      userMessage: {
+        background: USER_BG,
+        color: "#fff",
+        alignSelf: "flex-end",
+        border: `1px solid ${GLOW_TEAL}`,
+        boxShadow: `0 0 14px ${GLOW_TEAL}`,
       },
       inputContainer: {
-        padding: "20px 24px",
-        borderTop: `1px solid ${BORDER_COLOR}`,
-        background: WINDOW_BACKGROUND,
-        backdropFilter: "blur(18px)",
-        boxShadow: "0 -1px 0 rgba(255,255,255,0.05) inset",
+        borderTop: `1px solid ${BORDER}`,
+        background: "rgba(255,255,255,0.06)",
+        padding: "16px",
+        backdropFilter: "blur(12px)",
       },
-      inputWrapper: {
-        display: "flex",
-        gap: "12px",
-        alignItems: "flex-end",
-      },
-      messageInput: {
+      inputWrapper: { display: "flex", gap: "10px", alignItems: "center" },
+      input: {
         flex: 1,
-        border: `1px solid ${BORDER_COLOR}`,
-        borderRadius: "14px",
-        padding: "12px 16px",
+        background: "rgba(255,255,255,0.05)",
+        border: `1px solid ${BORDER}`,
+        borderRadius: "12px",
+        padding: "10px 14px",
+        color: TEXT_PRIMARY,
         fontSize: "14px",
         outline: "none",
         resize: "none",
-        minHeight: "20px",
-        maxHeight: "100px",
-        lineHeight: 1.4,
-        fontFamily: "inherit",
-        transition: "border-color 0.2s ease, box-shadow 0.2s ease",
-        background: INPUT_BACKGROUND,
-        color: TEXT_PRIMARY,
-        boxShadow: "inset 0 0 0 1px rgba(255,255,255,0.04)",
       },
       sendButton: {
-        background: PRIMARY_GRADIENT,
-        color: TEXT_PRIMARY,
-        border: "none",
-        borderRadius: "12px",
-        padding: "12px 16px",
+        background: "linear-gradient(90deg, rgba(61,245,242,0.35), rgba(255,255,255,0.3))",
+        border: `1px solid ${BORDER}`,
+        borderRadius: "10px",
+        padding: "10px",
         cursor: "pointer",
-        fontSize: "16px",
-        transition: "transform 0.2s ease, box-shadow 0.2s ease, opacity 0.2s ease",
         display: "flex",
         alignItems: "center",
         justifyContent: "center",
-        boxShadow: "0 18px 36px rgba(61, 245, 242, 0.25)",
+        color: TEXT_PRIMARY,
+        animation: "auroraPulse 4s ease-in-out infinite",
       },
     } satisfies StyleMap;
   }, [isOpen]);
 
   const handleSendMessage = async () => {
     if (!inputMessage.trim()) return;
-
-    const userMessage: ChatMessage = {
-      id: Date.now(),
-      text: inputMessage,
-      sender: "user",
-      timestamp: new Date(),
-    };
-
-    setMessages((prev) => [...prev, userMessage]);
-    const currentMessage = inputMessage;
+    const userMsg: ChatMessage = { id: Date.now(), text: inputMessage, sender: "user", timestamp: new Date() };
+    setMessages((prev) => [...prev, userMsg]);
     setInputMessage("");
     setIsTyping(true);
-
     try {
-      const data = await sendChatMessage(currentMessage);
-      const botResponse: ChatMessage = {
+      const res = await sendChatMessage(userMsg.text);
+      const botMsg: ChatMessage = {
         id: Date.now() + 1,
-        text: (data && (data.answer || data.response || data.message)) ||
-          "Sorry, I couldn't process your request. Please try again.",
+        text: res?.answer || res?.response || getBotResponse(userMsg.text),
         sender: "bot",
         timestamp: new Date(),
       };
-
-      setMessages((prev) => [...prev, botResponse]);
-    } catch (error) {
-      console.error("Chat API error:", error);
-      const botResponse: ChatMessage = {
-        id: Date.now() + 1,
-        text: getBotResponse(currentMessage),
-        sender: "bot",
-        timestamp: new Date(),
-      };
-      setMessages((prev) => [...prev, botResponse]);
+      setMessages((prev) => [...prev, botMsg]);
+    } catch {
+      setMessages((prev) => [
+        ...prev,
+        { id: Date.now() + 1, text: getBotResponse(userMsg.text), sender: "bot", timestamp: new Date() },
+      ]);
     } finally {
       setIsTyping(false);
     }
   };
 
-  const handleKeyDown = (event: KeyboardEvent<HTMLTextAreaElement>) => {
-    if (event.key === "Enter" && !event.shiftKey) {
-      event.preventDefault();
+  const handleKeyDown = (e: KeyboardEvent<HTMLTextAreaElement>) => {
+    if (e.key === "Enter" && !e.shiftKey) {
+      e.preventDefault();
       handleSendMessage();
     }
   };
 
   return (
-    <div style={styles.chatBotContainer}>
-  <div style={styles.chatWindow} id="trinix-chat-window" aria-hidden={!isOpen}>
-        <div style={styles.chatHeader}>
-          <div style={styles.headerInfo}>
-            <div style={styles.botAvatar} aria-hidden="true">
-              🤖
-            </div>
-            <div style={styles.headerText}>
-              <div style={styles.botName}>Trinix AI Assistant</div>
-              <div style={styles.botStatus}>Online • Typically replies instantly</div>
+    <div style={styles.container}>
+      <div style={styles.chatWindow}>
+        <div style={styles.header}>
+          <div style={styles.headerLeft}>
+            <div style={styles.botIcon}><Bot size={20} color="#3df5f2" /></div>
+            <div>
+              <div style={{ fontWeight: 600 }}>Trinix AI Assistant</div>
+              <div style={{ fontSize: "12px", color: TEXT_MUTED }}>Online • Always here to help</div>
             </div>
           </div>
-          <button
-            type="button"
-            style={styles.closeButton}
-            onClick={() => setIsOpen(false)}
-            onMouseEnter={(event) => {
-              event.currentTarget.style.opacity = "1";
-            }}
-            onMouseLeave={(event) => {
-              event.currentTarget.style.opacity = "0.8";
-            }}
-            aria-label="Close chat"
-          >
-            ×
-          </button>
+          <button onClick={() => setIsOpen(false)} style={{ background: "none", color: TEXT_PRIMARY, border: "none", fontSize: "20px" }}>×</button>
         </div>
 
-        <div style={styles.messagesContainer} className="chat-messages">
-          {messages.map((message) => (
-            <div
-              key={message.id}
-              style={{
-                ...styles.message,
-                ...(message.sender === "user" ? styles.userMessage : styles.botMessage),
-              }}
-            >
-              {message.text}
-            </div>
+        <div style={styles.messages}>
+          {messages.map((m) => (
+            <div key={m.id} style={{ ...styles.message, ...(m.sender === "user" ? styles.userMessage : styles.botMessage) }}>{m.text}</div>
           ))}
-
-          {isTyping ? (
-            <div style={styles.typingIndicator}>
-              <div style={styles.typingDot} className="typing-dot-1" />
-              <div style={styles.typingDot} className="typing-dot-2" />
-              <div style={styles.typingDot} className="typing-dot-3" />
-            </div>
-          ) : null}
-
+          {isTyping && <div style={{ ...styles.botMessage, opacity: 0.6 }}>Typing...</div>}
           <div ref={messagesEndRef} />
         </div>
 
         <div style={styles.inputContainer}>
           <div style={styles.inputWrapper}>
             <textarea
-              style={{
-                ...styles.messageInput,
-                borderColor: inputMessage ? "rgba(61, 245, 242, 0.75)" : BORDER_COLOR,
-                boxShadow: inputMessage
-                  ? "0 0 0 1px rgba(61,245,242,0.35), inset 0 0 0 1px rgba(255,255,255,0.05)"
-                  : "inset 0 0 0 1px rgba(255,255,255,0.04)",
-              }}
+              style={styles.input}
+              rows={1}
               value={inputMessage}
-              onChange={(event) => setInputMessage(event.target.value)}
+              onChange={(e) => setInputMessage(e.target.value)}
               onKeyDown={handleKeyDown}
               placeholder="Type your message..."
-              rows={1}
             />
-            <button
-              type="button"
-              style={{
-                ...styles.sendButton,
-                opacity: inputMessage.trim() ? 1 : 0.5,
-                cursor: inputMessage.trim() ? "pointer" : "not-allowed",
-              }}
-              onClick={handleSendMessage}
-              disabled={!inputMessage.trim()}
-              onMouseEnter={(event) => {
-                if (inputMessage.trim()) {
-                  event.currentTarget.style.transform = "scale(1.05)";
-                  event.currentTarget.style.boxShadow = "0 22px 44px rgba(61, 245, 242, 0.32)";
-                }
-              }}
-              onMouseLeave={(event) => {
-                event.currentTarget.style.transform = "scale(1)";
-                event.currentTarget.style.boxShadow = "0 18px 36px rgba(61, 245, 242, 0.25)";
-              }}
-              aria-label="Send message"
-            >
-              ➤
+            <button onClick={handleSendMessage} style={styles.sendButton}>
+              <Send size={18} />
             </button>
           </div>
         </div>
       </div>
 
-      <button
-        type="button"
-        style={styles.chatIcon}
-        onClick={() => setIsOpen((prev) => !prev)}
-        onMouseEnter={(event) => {
-          if (!isOpen) {
-            event.currentTarget.style.transform = "scale(1.1)";
-            event.currentTarget.style.boxShadow = "0 30px 60px rgba(8, 17, 36, 0.6)";
-          }
-        }}
-        onMouseLeave={(event) => {
-          if (!isOpen) {
-            event.currentTarget.style.transform = "scale(1)";
-            event.currentTarget.style.boxShadow = ICON_SHADOW;
-          }
-        }}
-        aria-expanded={isOpen}
-        aria-controls="trinix-chat-window"
-      >
-        {isOpen ? "×" : "💬"}
+      <button style={styles.iconButton} onClick={() => setIsOpen((p) => !p)}>
+        {isOpen ? "×" : <Bot size={26} color="#3df5f2" />}
       </button>
     </div>
   );
 }
 
-export default ChatBot;

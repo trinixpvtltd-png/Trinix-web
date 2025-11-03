@@ -1,14 +1,14 @@
 "use client";
 
-import { useFormState } from "react-dom";
 
+import { useActionState } from "react";
 import { SaveButton } from "../blog/SaveButton";
 import { type ResearchFormState, upsertResearchEntry } from "./actions";
 
 const INITIAL_STATE: ResearchFormState = {};
 
 export function CreatePublishedForm() {
-  const [state, formAction] = useFormState(upsertResearchEntry, INITIAL_STATE);
+  const [state, formAction] = useActionState(upsertResearchEntry, INITIAL_STATE);
 
   return (
     <section className="rounded-2xl border border-white/10 bg-white/5 p-6 shadow-lg shadow-black/30">

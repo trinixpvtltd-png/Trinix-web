@@ -7,7 +7,6 @@ import { motion, useReducedMotion } from "framer-motion";
 export function MonolithsTimeline() {
   const { milestones, setActiveIndex, setJourneyInView } = useAbout();
   const containerRef = useRef<HTMLDivElement | null>(null);
-  // no motion needed here; just state driven
 
   useEffect(() => {
     const el = containerRef.current;

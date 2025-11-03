@@ -1,29 +1,91 @@
-import path from "path";
 import { z } from "zod";
-
+import { adminDb } from "@/server/firebase/admin";
 import type { JobRole } from "@/types/content";
-import { mutateJsonFile, readJsonFile } from "@/server/data/fileStore";
+const jobSchema = z.object({
+  id: z.string(),
+  title: z.string(),
+  location: z.string(),
+  type: z.string(),
+  description: z.string(),
+  link: z.string().optional(),
+  updated_at: z.string().optional(),
+});
 
-const JOBS_PATH = path.join(process.cwd(), "src", "data", "jobs.json");
-const JOBS_FALLBACK: JobRole[] = [];
+const collectionRef = adminDb.collection("jobs");
 
-const jobSchema = z.array(
-  z.object({
-    id: z.string(),
-    title: z.string(),
-    location: z.string(),
-    type: z.string(),
-    description: z.string(),
-    link: z.string().optional(),
-  })
-);
 
 export async function readJobs(): Promise<JobRole[]> {
-  return readJsonFile(JOBS_PATH, jobSchema, JOBS_FALLBACK) as Promise<JobRole[]>;
+  try {
+    const snapshot = await collectionRef.orderBy("title").get();
+
+    const jobs: JobRole[] = snapshot.docs.map((doc) => {
+      const data = doc.data() as Omit<JobRole, "id">; 
+      return { ...data, id: doc.id }; 
+    });
+
+    const parsed = z.array(jobSchema).safeParse(jobs);
+    if (!parsed.success) {
+      console.warn("⚠️ Job data validation failed:", parsed.error.format());
+      return [];
+    }
+
+    return parsed.data;
+  } catch (err) {
+    console.error("Failed to read job roles:", err);
+    return [];
+  }
 }
 
+
 export async function updateJobs<R>(
-  mutator: (current: JobRole[]) => Promise<{ data: JobRole[]; result: R }> | { data: JobRole[]; result: R }
+  mutator:
+    | ((current: JobRole[]) => Promise<{ data: JobRole[]; result: R }>)
+    | ((current: JobRole[]) => { data: JobRole[]; result: R })
 ): Promise<R> {
-  return mutateJsonFile(JOBS_PATH, jobSchema, mutator, JOBS_FALLBACK);
+  try {
+    const snapshot = await collectionRef.get();
+
+    const currentJobs: JobRole[] = snapshot.docs.map((doc) => {
+      const data = doc.data() as Omit<JobRole, "id">;
+      return { ...data, id: doc.id };
+    });
+
+    const mutation = await mutator(currentJobs);
+
+    const batch = adminDb.batch();
+    for (const job of mutation.data) {
+      const { id, ...rest } = job;
+      const docRef = collectionRef.doc(id);
+      batch.set(
+        docRef,
+        { ...rest, updated_at: new Date().toISOString() },
+        { merge: true }
+      );
+    }
+
+    await batch.commit();
+    return mutation.result;
+  } catch (err) {
+    console.error(" Failed to update jobs:", err);
+    throw err;
+  }
+}
+
+
+export async function deleteJob(id: string): Promise<void> {
+  try {
+    const docRef = collectionRef.doc(id);
+    const snapshot = await docRef.get();
+
+    if (!snapshot.exists) {
+      console.warn(` Job not found: ${id}`);
+      return;
+    }
+
+    await docRef.delete();
+    console.log(` Deleted job: ${id}`);
+  } catch (err) {
+    console.error("Failed to delete job:", err);
+    throw err;
+  }
 }

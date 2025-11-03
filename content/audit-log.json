@@ -1,7 +1,1577 @@
 [
   {
+    "id": "d439030d-78c0-41e9-99df-e3a2b542f2e8",
+    "resource": "research-published",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "venue": "aaaaaaaaaaaaaaaaaa",
+      "updated_at": "2025-11-03T14:14:11.446Z",
+      "domain": [
+        "fintech"
+      ],
+      "open_access": false,
+      "title": "llllllllllllllllllllllllllllllll",
+      "authors": [
+        "helooo"
+      ],
+      "doi": "https://mail.google.com/mail/u/1/#inbox/FMfcgzQcqbbSsNvlcmGQtDznDjHpPBzn",
+      "id": "aaaaaaaaaaaaaaaaaa"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T14:17:44.995Z"
+  },
+  {
+    "id": "e3434d33-37df-48d9-99ba-c77f9c1072b4",
+    "resource": "research-published",
+    "action": "create",
+    "userId": "admin",
+    "before": null,
+    "after": {
+      "id": "aaaaaaaaaaaaaaaaaa",
+      "title": "llllllllllllllllllllllllllllllll",
+      "authors": [
+        "helooo"
+      ],
+      "venue": "aaaaaaaaaaaaaaaaaa",
+      "doi": "https://mail.google.com/mail/u/1/#inbox/FMfcgzQcqbbSsNvlcmGQtDznDjHpPBzn",
+      "open_access": false,
+      "domain": [
+        "fintech"
+      ]
+    },
+    "timestamp": "2025-11-03T14:14:11.541Z"
+  },
+  {
+    "id": "ad332a17-cb38-4db6-a261-171eef0e8863",
+    "resource": "research-preprints",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "identifier": "trx-007-praj",
+      "server": "zzzzzzzzzzzzzzzzzz",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhTuVLE3kGijkHzeOYcRJyrwC5Nl78BnIsaEgA",
+      "domain": [
+        "physiccs"
+      ],
+      "abstract": "fkndjfnjd",
+      "title": "aaaaaaaaaaaaa",
+      "authors": [
+        "aaaaaaaaaaaaaaa"
+      ],
+      "updated_at": "2025-11-03T14:10:51.936Z",
+      "version_date": "2005-02-01",
+      "id": "zzzzzzzzzzzzzzz"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T14:13:34.548Z"
+  },
+  {
+    "id": "4b3a3a0e-929f-4d3f-bfca-b4c3f92ca9c0",
+    "resource": "research-preprints",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "identifier": "trx-007-praj",
+      "server": "zzzzzzzzzzzzzzzzzz",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhTuVLE3kGijkHzeOYcRJyrwC5Nl78BnIsaEgA",
+      "updated_at": "2025-11-03T14:10:09.799Z",
+      "domain": [
+        "physiccs"
+      ],
+      "version_date": "",
+      "abstract": "fkndjfnjd",
+      "title": "aaaaaaaaaaaaa",
+      "authors": [
+        "aaaaaaaaaaaaaaa"
+      ],
+      "id": "zzzzzzzzzzzzzzz"
+    },
+    "after": {
+      "id": "zzzzzzzzzzzzzzz",
+      "title": "aaaaaaaaaaaaa",
+      "authors": [
+        "aaaaaaaaaaaaaaa"
+      ],
+      "server": "zzzzzzzzzzzzzzzzzz",
+      "identifier": "trx-007-praj",
+      "version_date": "2005-02-01",
+      "abstract": "fkndjfnjd",
+      "domain": [
+        "physiccs"
+      ]
+    },
+    "timestamp": "2025-11-03T14:10:51.999Z"
+  },
+  {
+    "id": "d572a4b9-64bb-43f3-af5f-37fc7ceb2cd1",
+    "resource": "research-preprints",
+    "action": "create",
+    "userId": "admin",
+    "before": null,
+    "after": {
+      "id": "zzzzzzzzzzzzzzz",
+      "title": "aaaaaaaaaaaaa",
+      "authors": [
+        "aaaaaaaaaaaaaaa"
+      ],
+      "server": "zzzzzzzzzzzzzzzzzz",
+      "identifier": "trx-007-praj",
+      "version_date": "",
+      "abstract": "fkndjfnjd",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhTuVLE3kGijkHzeOYcRJyrwC5Nl78BnIsaEgA",
+      "domain": [
+        "physiccs"
+      ]
+    },
+    "timestamp": "2025-11-03T14:10:09.873Z"
+  },
+  {
+    "id": "d45f370c-9b3a-4c54-8896-fe041d664d50",
+    "resource": "research-ongoing",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "identifier": "trx-007-praj",
+      "server": "Ongoing Research (Trinix Research)",
+      "domain": [
+        "cognitive"
+      ],
+      "version_date": "2025-02-03",
+      "abstract": "hello",
+      "title": "helooooooooooooooooooooooooo",
+      "authors": [
+        "trinix"
+      ],
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhezowfkDXlydxfqvsUbIcZCP4W07AkQmN8g9o",
+      "updated_at": "2025-11-03T14:03:41.150Z",
+      "id": "zzzzzzzzzzzzzzzzzzz"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T14:06:04.287Z"
+  },
+  {
+    "id": "c444c4a4-0460-4379-a2c2-ed465b9c4d04",
+    "resource": "research-ongoing",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "identifier": "TRX-2025-NAC",
+      "server": "skjdnjsnfjnfj",
+      "domain": [
+        "ai"
+      ],
+      "version_date": "2025-02-02",
+      "abstract": "nnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "title": "smsmfmdsmfmsf",
+      "authors": [
+        "trinix"
+      ],
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBh0agXfvODszKfmIWTQx8pc2noeYvLH4tJ6VPN",
+      "updated_at": "2025-11-03T14:04:49.331Z",
+      "id": "aaaaaaaaaaaaaa"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T14:05:49.893Z"
+  },
+  {
+    "id": "292cd6b1-1c4f-490e-8f61-bd54b1686402",
+    "resource": "research-ongoing",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "identifier": "TRX-2025-NAC",
+      "server": "skjdnjsnfjnfj",
+      "pdf": "https://utfs.io/f/BYvLQeRUvmBhM5PeFJ3qKBLROF4sk3NYmbrZSCuJtvIUP5f8",
+      "updated_at": "2025-11-03T13:31:32.988Z",
+      "domain": [
+        "ai"
+      ],
+      "version_date": "2025-02-02",
+      "abstract": "nnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "title": "smsmfmdsmfmsf",
+      "authors": [
+        "trinix"
+      ],
+      "id": "aaaaaaaaaaaaaa"
+    },
+    "after": {
+      "id": "aaaaaaaaaaaaaa",
+      "title": "smsmfmdsmfmsf",
+      "authors": [
+        "trinix"
+      ],
+      "server": "skjdnjsnfjnfj",
+      "identifier": "TRX-2025-NAC",
+      "version_date": "2025-02-02",
+      "abstract": "nnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBh0agXfvODszKfmIWTQx8pc2noeYvLH4tJ6VPN",
+      "domain": [
+        "ai"
+      ]
+    },
+    "timestamp": "2025-11-03T14:04:49.418Z"
+  },
+  {
+    "id": "b227516d-3353-4a0e-9ee7-287251465c85",
+    "resource": "research-ongoing",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "identifier": "trx-007-praj",
+      "server": "Ongoing Research (Trinix Research)",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhMQ8MpV3qKBLROF4sk3NYmbrZSCuJtvIUP5f8",
+      "updated_at": "2025-11-03T13:42:46.338Z",
+      "domain": [
+        "cognitive"
+      ],
+      "version_date": "2025-02-03",
+      "abstract": "hello",
+      "title": "helooooooooooooooooooooooooo",
+      "authors": [
+        "trinix"
+      ],
+      "id": "zzzzzzzzzzzzzzzzzzz"
+    },
+    "after": {
+      "id": "zzzzzzzzzzzzzzzzzzz",
+      "title": "helooooooooooooooooooooooooo",
+      "authors": [
+        "trinix"
+      ],
+      "server": "Ongoing Research (Trinix Research)",
+      "identifier": "trx-007-praj",
+      "version_date": "2025-02-03",
+      "abstract": "hello",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhezowfkDXlydxfqvsUbIcZCP4W07AkQmN8g9o",
+      "domain": [
+        "cognitive"
+      ]
+    },
+    "timestamp": "2025-11-03T14:03:41.225Z"
+  },
+  {
+    "id": "a239013a-d19e-42af-8ce3-e106142d7f5e",
+    "resource": "research-ongoing",
+    "action": "create",
+    "userId": "admin",
+    "before": null,
+    "after": {
+      "id": "zzzzzzzzzzzzzzzzzzz",
+      "title": "helooooooooooooooooooooooooo",
+      "authors": [
+        "trinix"
+      ],
+      "server": "Ongoing Research (Trinix Research)",
+      "identifier": "trx-007-praj",
+      "version_date": "2025-02-03",
+      "abstract": "hello",
+      "pdf": "https://woeegshf4w.ufs.sh/f/BYvLQeRUvmBhMQ8MpV3qKBLROF4sk3NYmbrZSCuJtvIUP5f8",
+      "domain": [
+        "cognitive"
+      ]
+    },
+    "timestamp": "2025-11-03T13:42:46.474Z"
+  },
+  {
+    "id": "bc814504-6a57-4c5d-9694-6ba537a425cd",
+    "resource": "research-ongoing",
+    "action": "update",
+    "userId": "admin",
+    "before": null,
+    "after": {
+      "id": "aaaaaaaaaaaaaa",
+      "title": "smsmfmdsmfmsf",
+      "authors": [
+        "trinix"
+      ],
+      "server": "skjdnjsnfjnfj",
+      "identifier": "TRX-2025-NAC",
+      "version_date": "2025-02-02",
+      "abstract": "nnnnnnnnnnnnnnnnnnnnnnnnnnn",
+      "pdf": "https://utfs.io/f/BYvLQeRUvmBhM5PeFJ3qKBLROF4sk3NYmbrZSCuJtvIUP5f8",
+      "domain": [
+        "ai"
+      ]
+    },
+    "timestamp": "2025-11-03T13:31:33.208Z"
+  },
+  {
+    "id": "faead5fd-5b39-40ab-adbd-003112b805c7",
+    "resource": "careers",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "description": "Architect resilient AI workloads.",
+      "location": "Remote",
+      "title": "AI Platform Architect",
+      "type": "Full-time",
+      "updated_at": "2025-11-03T06:11:17.952Z",
+      "link": "/hello",
+      "id": "ai-specialist"
+    },
+    "after": {
+      "id": "ai-specialist",
+      "title": "AI Platform Architect",
+      "location": "Remote",
+      "type": "Full-time",
+      "description": "Architect resilient AI workloads.",
+      "link": "/"
+    },
+    "timestamp": "2025-11-03T06:11:28.385Z"
+  },
+  {
+    "id": "531cc525-2237-4dec-8986-b46ea74ac05e",
+    "resource": "careers",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "description": "Architect resilient AI workloads.",
+      "location": "Remote",
+      "title": "AI Platform Architect",
+      "type": "Full-time",
+      "updated_at": "2025-11-03T06:11:03.308Z",
+      "link": "/",
+      "id": "ai-specialist"
+    },
+    "after": {
+      "id": "ai-specialist",
+      "title": "AI Platform Architect",
+      "location": "Remote",
+      "type": "Full-time",
+      "description": "Architect resilient AI workloads.",
+      "link": "/hello"
+    },
+    "timestamp": "2025-11-03T06:11:18.036Z"
+  },
+  {
+    "id": "9422bb5a-b681-44f8-886c-a7f32e16a0d5",
+    "resource": "careers",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "updated_at": "2025-11-03T06:09:31.783Z",
+      "link": "https://www.instagram.com/legarda.ph/",
+      "description": "Architect resilient AI workloads.",
+      "location": "Remote",
+      "title": "AI Platform Architect",
+      "type": "Full-time",
+      "id": "ai-specialist"
+    },
+    "after": {
+      "id": "ai-specialist",
+      "title": "AI Platform Architect",
+      "location": "Remote",
+      "type": "Full-time",
+      "description": "Architect resilient AI workloads.",
+      "link": "/"
+    },
+    "timestamp": "2025-11-03T06:11:03.377Z"
+  },
+  {
+    "id": "1f807ea6-aa7f-483b-b905-d77e18af4aa2",
+    "resource": "careers",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "AI Specialist"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T06:10:10.529Z"
+  },
+  {
+    "id": "1ec70540-5007-43ef-9543-00ac4e42c6e0",
+    "resource": "careers",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "id": "AI Specialist",
+      "title": "AI Platform Architect",
+      "location": "Remote",
+      "type": "Full-time",
+      "description": "Architect resilient AI workloads.",
+      "link": "#",
+      "updated_at": "2025-11-03T05:30:21.315Z"
+    },
+    "after": {
+      "id": "ai-specialist",
+      "title": "AI Platform Architect",
+      "location": "Remote",
+      "type": "Full-time",
+      "description": "Architect resilient AI workloads.",
+      "link": "https://www.instagram.com/legarda.ph/"
+    },
+    "timestamp": "2025-11-03T06:09:31.876Z"
+  },
+  {
+    "id": "f9cd1f80-0bae-4c9c-b51f-375afce588a0",
+    "resource": "blog",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "slug": "neural-yantras",
+      "title": "Neural Yantras: Designing Glow Circuits for UI Futures",
+      "blurb": "Translating sacred geometry into adaptive interaction gradients.",
+      "author": "Trinix Lab",
+      "published_at": "2025-06-08",
+      "publication_date": "",
+      "estimated_read_duration": "",
+      "description_points": [],
+      "updated_at": "2025-11-02T21:46:23.232Z"
+    },
+    "after": {
+      "slug": "neural-yantras",
+      "title": "Neural Yantras: Designing Glow Circuits for UI Futures",
+      "blurb": "Translating sacred geometry into adaptive interaction gradients.",
+      "author": "Trinix Lab",
+      "published_at": "2025-06-08",
+      "publication_date": "",
+      "estimated_read_duration": "",
+      "description_points": [
+        "hellllllllllllllllllllllllllllllllllllllllllllllllllllllllllo"
+      ]
+    },
+    "timestamp": "2025-11-03T05:51:03.055Z"
+  },
+  {
+    "id": "2dab5907-06df-4712-97b4-b4e1c0672e4e",
+    "resource": "careers",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "SEIntern"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T05:30:02.793Z"
+  },
+  {
+    "id": "837d1871-44ac-422a-9346-18bd8ae54027",
+    "resource": "careers",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "Intern"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T05:29:57.275Z"
+  },
+  {
+    "id": "858c107b-65c0-4185-8e70-2c4888a623f3",
+    "resource": "careers",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "ml-ethicist"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T05:29:52.274Z"
+  },
+  {
+    "id": "b6d617f1-16d3-43b7-8482-1f3df82b92d7",
+    "resource": "careers",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "AI Specialist"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T05:29:46.787Z"
+  },
+  {
+    "id": "4fa33d02-4c56-4a49-a733-8f542a351656",
+    "resource": "careers",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "jsfnsdjnfjdfjndfdfdf"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T04:07:54.712Z"
+  },
+  {
+    "id": "c2501826-e10e-452c-93df-24e4ada31d11",
+    "resource": "careers",
+    "action": "create",
+    "userId": "admin",
+    "after": {
+      "id": "jsfnsdjnfjdfjndfdfdf",
+      "title": "software deve",
+      "location": "remote",
+      "type": "full-time",
+      "description": "ssssssssssssssssssssssssssssssssssssss",
+      "link": "/coming-soon"
+    },
+    "timestamp": "2025-11-03T04:07:46.832Z"
+  },
+  {
+    "id": "17773efc-37ca-4f79-9b34-1ba69ca97ab3",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "summary": "sfjfffffffffffffffffffffffff",
+      "updated_at": "2025-11-03T03:31:04.975Z",
+      "spotlightNote": "skfnskfnk",
+      "domain": "aaaaaaaaaaaaaaaaa",
+      "link": "/coming soon",
+      "name": "sfndkjsfmsnafn",
+      "id": "msfsmfmsnmfnsmfn",
+      "keyFeatures": [
+        "sfffffffffffffffff"
+      ],
+      "ctas": [
+        {
+          "label": "Contact us",
+          "href": "prajwalbaluni@gmai.com"
+        }
+      ],
+      "status": "sfsfsff"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:31:15.732Z"
+  },
+  {
+    "id": "80584efb-2e8a-4e1e-9b80-d47d541f2667",
+    "resource": "projects",
+    "action": "create",
+    "userId": "admin",
+    "after": {
+      "id": "msfsmfmsnmfnsmfn",
+      "name": "sfndkjsfmsnafn",
+      "summary": "sfjfffffffffffffffffffffffff",
+      "status": "sfsfsff",
+      "domain": "aaaaaaaaaaaaaaaaa",
+      "link": "/coming soon",
+      "spotlightNote": "skfnskfnk",
+      "keyFeatures": [
+        "sfffffffffffffffff"
+      ],
+      "ctas": [
+        {
+          "label": "Contact us",
+          "href": "prajwalbaluni@gmai.com"
+        }
+      ]
+    },
+    "timestamp": "2025-11-03T03:31:05.058Z"
+  },
+  {
+    "id": "d21d4d02-1cca-4a2a-ba42-cd2588f85128",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "dharamraksha",
+      "name": "DharamRaksha",
+      "summary": "Judicial AI co-pilot assisting courts and legal teams with document analysis, precedent extraction, and equitable decision insights anchored in constitutional values.",
+      "status": "Design",
+      "domain": "LegalTech",
+      "keyFeatures": [
+        "Automated precedent summarization",
+        "Bias and equity review signals",
+        "Secure evidence handling pipeline",
+        "Bench-ready briefing dashboards"
+      ],
+      "ctas": [
+        {
+          "label": "Design Preview",
+          "href": "/preprints/DharamRaksha.pdf"
+        },
+        {
+          "label": "Request Access",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/preprints/DharamRaksha.pdf",
+      "updated_at": "2025-11-03T03:25:53.781Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:27:07.609Z"
+  },
+  {
+    "id": "1412427d-ce22-421a-b34d-6ae8e985701f",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "ethereal-nexus",
+      "name": "Ethereal Nexus",
+      "summary": "Metaverse playground for persistent, collaborative experiences that merges volumetric storytelling, creator economies, and social exploration.",
+      "status": "Exploration",
+      "domain": "Immersive Worlds",
+      "keyFeatures": [
+        "Persistent shared world instances",
+        "Creator economy tooling",
+        "Spatial audio events",
+        "Lore-driven narrative arcs"
+      ],
+      "ctas": [
+        {
+          "label": "Experience Preview",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Creator Docs",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.782Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:27:02.530Z"
+  },
+  {
+    "id": "93109514-d447-4bcf-a8e3-7f39c183b689",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "eventify",
+      "name": "Eventify Platform",
+      "summary": "Comprehensive event management platform featuring multi-user roles, venue discovery, booking management, and real-time dashboard analytics across large event portfolios.",
+      "status": "In Discovery",
+      "domain": "Event Management",
+      "keyFeatures": [
+        "Multi-role user management system",
+        "Advanced venue search & filtering",
+        "Real-time booking management",
+        "Interactive dashboard analytics"
+      ],
+      "ctas": [
+        {
+          "label": "Explore",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Details",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.781Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:55.395Z"
+  },
+  {
+    "id": "93ad61a5-ba0d-4236-b225-c77e1aabf7b3",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "fin-fine",
+      "name": "Fingo Reserve",
+      "summary": "A resilient digital reserve concept exploring stability, transparency, and programmable policy for next-generation finance with a focus on responsible AI governance.",
+      "status": "Concept",
+      "domain": "FinTech",
+      "keyFeatures": [
+        "Transparent reserve accounting",
+        "Programmable policy levers",
+        "Risk dashboards with anomaly detection",
+        "Cross-chain interoperability research"
+      ],
+      "ctas": [
+        {
+          "label": "Research Deck",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Concept Note",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.781Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:50.503Z"
+  },
+  {
+    "id": "f3a76d2c-1e60-4dbc-9445-e948cb8d931a",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "medgo",
+      "name": "MedGO Healthcare",
+      "summary": "HIPAA-compliant telemedicine platform enabling secure video consultations, patient record management, prescription handling, and appointment scheduling. Features end-to-end encryption and provider verification.",
+      "status": "Pilot",
+      "domain": "Healthcare",
+      "keyFeatures": [
+        "HIPAA-compliant video consultations",
+        "Secure patient record management",
+        "Electronic prescription system",
+        "Appointment scheduling & reminders"
+      ],
+      "ctas": [
+        {
+          "label": "Request Demo",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Product Brief",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.780Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:44.264Z"
+  },
+  {
+    "id": "1904cbd2-b045-4e75-94f7-2c1d97c49cb9",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "propgo",
+      "name": "PropGo Platform",
+      "summary": "Digital platform designed to simplify real estate transactions by connecting property owners with agents through verified listings, secure interactions, and streamlined workflows.",
+      "status": "Scoping",
+      "domain": "Real Estate",
+      "keyFeatures": [
+        "Verified property listings system",
+        "Direct owner-to-agent communication",
+        "Secure property verification process",
+        "Agent subscription management"
+      ],
+      "ctas": [
+        {
+          "label": "Explore",
+          "href": "/propgo"
+        },
+        {
+          "label": "Details",
+          "href": "/propgo"
+        }
+      ],
+      "link": "/propgo",
+      "updated_at": "2025-11-03T03:25:53.781Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:39.016Z"
+  },
+  {
+    "id": "ab8f80e4-442a-4799-926b-d5a9f6f5feeb",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "quirky",
+      "name": "Quirky",
+      "summary": "A playful, privacy-respecting matching experience that blends personality science with immersive prompts to foster meaningful connections.",
+      "status": "Concept",
+      "domain": "Social Networking",
+      "keyFeatures": [
+        "Secure personality-based matchmaking",
+        "Ephemeral voice-room icebreakers",
+        "Safety-first community guidelines",
+        "Anonymized analytics for hosts"
+      ],
+      "ctas": [
+        {
+          "label": "Join Waitlist",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Concept Deck",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.782Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:31.365Z"
+  },
+  {
+    "id": "30a8ccf6-a9f1-425a-a2a3-dc594d608c61",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "sos",
+      "name": "SOS Emergency Network",
+      "summary": "Emergency response system ensuring rapid assistance and safety. Connects responders, dispatchers, and civilians via real-time communication and location-based services for immediate crisis response.",
+      "status": "coming soon",
+      "domain": "Emergency Services",
+      "keyFeatures": [
+        "Real-time emergency alert system",
+        "GPS location tracking and mapping",
+        "Multi-channel communication platform",
+        "Emergency responder dispatch system"
+      ],
+      "ctas": [
+        {
+          "label": "Explore",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Details",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.779Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:26.733Z"
+  },
+  {
+    "id": "64224fd9-b179-4f43-aaa1-6e8c08e940a0",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "web",
+      "name": "Studio",
+      "summary": "Boutique build squad turning early-stage ideas into production-grade digital products through rapid experimentation and battle-tested delivery practices.",
+      "status": "Launch",
+      "domain": "Studio",
+      "keyFeatures": [
+        "Idea-to-MVP in under eight weeks",
+        "Embedded product leadership",
+        "Multi-stack engineering squad",
+        "Observability and QA baked in"
+      ],
+      "ctas": [
+        {
+          "label": "Start a Project",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Capabilities",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "https://webstitch.org",
+      "updated_at": "2025-11-03T03:25:53.778Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:21.748Z"
+  },
+  {
+    "id": "0cc5ca24-b957-49e0-9b88-c151a392bab3",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "vedic-ai",
+      "name": "Vedic AI Reasoning Lab",
+      "summary": "Lightweight, research-first reasoning models inspired by Vedic knowledge systems that emphasize transparency and cultural alignment for responsible AI deployment.",
+      "status": "Research",
+      "domain": "AI Research",
+      "keyFeatures": [
+        "Vedic ontology-backed knowledge graphs",
+        "Explainability tooling for regulated sectors",
+        "Few-shot guided discernment engine",
+        "Alignment signal monitoring dashboards"
+      ],
+      "ctas": [
+        {
+          "label": "Preview",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Lab Notes",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.779Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:16.608Z"
+  },
+  {
+    "id": "17c03453-9154-4d25-8d82-c7b6a6569c35",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "webstitch",
+      "name": "Webstitch Studio",
+      "summary": "Boutique build squad turning early-stage ideas into production-grade digital products through rapid experimentation and battle-tested delivery practices.",
+      "status": "Launching",
+      "domain": "Product Studio",
+      "keyFeatures": [
+        "Idea-to-MVP in under eight weeks",
+        "Embedded product leadership",
+        "Multi-stack engineering squad",
+        "Observability and QA baked in"
+      ],
+      "ctas": [
+        {
+          "label": "Start a Project",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Capabilities",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:25:53.779Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:26:11.190Z"
+  },
+  {
+    "id": "48df6e68-78f2-4363-8f08-1c637a5a7aaf",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "eventify",
+      "name": "Eventify Platform",
+      "summary": "Comprehensive event management platform featuring multi-user roles, venue discovery, booking management, and real-time dashboard analytics across large event portfolios.",
+      "status": "In Discovery",
+      "domain": "Event Management",
+      "keyFeatures": [
+        "Multi-role user management system",
+        "Advanced venue search & filtering",
+        "Real-time booking management",
+        "Interactive dashboard analytics"
+      ],
+      "ctas": [
+        {
+          "label": "Explore",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Details",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.076Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:48.012Z"
+  },
+  {
+    "id": "be375a8d-2ca8-4d95-9ca9-4eaf6bf13a65",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "fin-fine",
+      "name": "Fingo Reserve",
+      "summary": "A resilient digital reserve concept exploring stability, transparency, and programmable policy for next-generation finance with a focus on responsible AI governance.",
+      "status": "Concept",
+      "domain": "FinTech",
+      "keyFeatures": [
+        "Transparent reserve accounting",
+        "Programmable policy levers",
+        "Risk dashboards with anomaly detection",
+        "Cross-chain interoperability research"
+      ],
+      "ctas": [
+        {
+          "label": "Research Deck",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Concept Note",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.077Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:42.487Z"
+  },
+  {
+    "id": "d2ec3191-134a-4c6e-9a7e-beedb46ffc1b",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "medgo",
+      "name": "MedGO Healthcare",
+      "summary": "HIPAA-compliant telemedicine platform enabling secure video consultations, patient record management, prescription handling, and appointment scheduling. Features end-to-end encryption and provider verification.",
+      "status": "Pilot",
+      "domain": "Healthcare",
+      "keyFeatures": [
+        "HIPAA-compliant video consultations",
+        "Secure patient record management",
+        "Electronic prescription system",
+        "Appointment scheduling & reminders"
+      ],
+      "ctas": [
+        {
+          "label": "Request Demo",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Product Brief",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.076Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:36.647Z"
+  },
+  {
+    "id": "f2c63cef-52ab-4587-ac3e-46b3dfdac310",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "propgo",
+      "name": "PropGo Platform",
+      "summary": "Digital platform designed to simplify real estate transactions by connecting property owners with agents through verified listings, secure interactions, and streamlined workflows.",
+      "status": "Scoping",
+      "domain": "Real Estate",
+      "keyFeatures": [
+        "Verified property listings system",
+        "Direct owner-to-agent communication",
+        "Secure property verification process",
+        "Agent subscription management"
+      ],
+      "ctas": [
+        {
+          "label": "Explore",
+          "href": "/propgo"
+        },
+        {
+          "label": "Details",
+          "href": "/propgo"
+        }
+      ],
+      "link": "/propgo",
+      "updated_at": "2025-11-03T03:23:55.076Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:31.416Z"
+  },
+  {
+    "id": "9f7ca6cd-c75f-4760-8962-5b2a0c6a7793",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "quirky",
+      "name": "Quirky",
+      "summary": "A playful, privacy-respecting matching experience that blends personality science with immersive prompts to foster meaningful connections.",
+      "status": "Concept",
+      "domain": "Social Networking",
+      "keyFeatures": [
+        "Secure personality-based matchmaking",
+        "Ephemeral voice-room icebreakers",
+        "Safety-first community guidelines",
+        "Anonymized analytics for hosts"
+      ],
+      "ctas": [
+        {
+          "label": "Join Waitlist",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Concept Deck",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.077Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:25.785Z"
+  },
+  {
+    "id": "95bbcdce-934e-4be5-b53d-527be5ec8a3a",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "sos",
+      "name": "SOS Emergency Network",
+      "summary": "Emergency response system ensuring rapid assistance and safety. Connects responders, dispatchers, and civilians via real-time communication and location-based services for immediate crisis response.",
+      "status": "coming soon",
+      "domain": "Emergency Services",
+      "keyFeatures": [
+        "Real-time emergency alert system",
+        "GPS location tracking and mapping",
+        "Multi-channel communication platform",
+        "Emergency responder dispatch system"
+      ],
+      "ctas": [
+        {
+          "label": "Explore",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Details",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.076Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:16.296Z"
+  },
+  {
+    "id": "ab994d91-c762-4a44-b716-8f0f47ac21fa",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "web",
+      "name": "Studio",
+      "summary": "Boutique build squad turning early-stage ideas into production-grade digital products through rapid experimentation and battle-tested delivery practices.",
+      "status": "Launch",
+      "domain": "Studio",
+      "keyFeatures": [
+        "Idea-to-MVP in under eight weeks",
+        "Embedded product leadership",
+        "Multi-stack engineering squad",
+        "Observability and QA baked in"
+      ],
+      "ctas": [
+        {
+          "label": "Start a Project",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Capabilities",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "https://webstitch.org",
+      "updated_at": "2025-11-03T03:23:55.072Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:09.977Z"
+  },
+  {
+    "id": "aaa36043-7ffc-4a8a-b8d4-89693b80b2ac",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "vedic-ai",
+      "name": "Vedic AI Reasoning Lab",
+      "summary": "Lightweight, research-first reasoning models inspired by Vedic knowledge systems that emphasize transparency and cultural alignment for responsible AI deployment.",
+      "status": "Research",
+      "domain": "AI Research",
+      "keyFeatures": [
+        "Vedic ontology-backed knowledge graphs",
+        "Explainability tooling for regulated sectors",
+        "Few-shot guided discernment engine",
+        "Alignment signal monitoring dashboards"
+      ],
+      "ctas": [
+        {
+          "label": "Preview",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Lab Notes",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.076Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:25:04.539Z"
+  },
+  {
+    "id": "81a32425-0601-4c61-a104-380ab9a3c94a",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "webstitch",
+      "name": "Webstitch Studio",
+      "summary": "Boutique build squad turning early-stage ideas into production-grade digital products through rapid experimentation and battle-tested delivery practices.",
+      "status": "Launching",
+      "domain": "Product Studio",
+      "keyFeatures": [
+        "Idea-to-MVP in under eight weeks",
+        "Embedded product leadership",
+        "Multi-stack engineering squad",
+        "Observability and QA baked in"
+      ],
+      "ctas": [
+        {
+          "label": "Start a Project",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Capabilities",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.075Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:24:58.619Z"
+  },
+  {
+    "id": "6f5bce6a-dc28-4e83-a77d-a91e9980d617",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "ethereal-nexus",
+      "name": "Ethereal Nexus",
+      "summary": "Metaverse playground for persistent, collaborative experiences that merges volumetric storytelling, creator economies, and social exploration.",
+      "status": "Exploration",
+      "domain": "Immersive Worlds",
+      "keyFeatures": [
+        "Persistent shared world instances",
+        "Creator economy tooling",
+        "Spatial audio events",
+        "Lore-driven narrative arcs"
+      ],
+      "ctas": [
+        {
+          "label": "Experience Preview",
+          "href": "/coming-soon"
+        },
+        {
+          "label": "Creator Docs",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/coming-soon",
+      "updated_at": "2025-11-03T03:23:55.077Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:24:50.745Z"
+  },
+  {
+    "id": "0fc19f3a-42b4-4166-950e-eb7beba01720",
+    "resource": "projects",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "dharamraksha",
+      "name": "DharamRaksha",
+      "summary": "Judicial AI co-pilot assisting courts and legal teams with document analysis, precedent extraction, and equitable decision insights anchored in constitutional values.",
+      "status": "Design",
+      "domain": "LegalTech",
+      "keyFeatures": [
+        "Automated precedent summarization",
+        "Bias and equity review signals",
+        "Secure evidence handling pipeline",
+        "Bench-ready briefing dashboards"
+      ],
+      "ctas": [
+        {
+          "label": "Design Preview",
+          "href": "/preprints/DharamRaksha.pdf"
+        },
+        {
+          "label": "Request Access",
+          "href": "/coming-soon"
+        }
+      ],
+      "link": "/preprints/DharamRaksha.pdf",
+      "updated_at": "2025-11-03T03:23:55.077Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-03T03:24:44.074Z"
+  },
+  {
+    "id": "74fe5e40-2d51-4600-85b8-2c70c8ba3fba",
+    "resource": "blog",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "estimated_read_duration": "4min read",
+      "publication_date": "",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "author": "xxxxxxxxxxxx",
+      "updated_at": "2025-11-02T21:46:23.232Z",
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx"
+    },
+    "after": null,
+    "timestamp": "2025-11-02T21:46:35.208Z"
+  },
+  {
+    "id": "ab108a6d-1b62-4905-82e3-9b2d43c10bc9",
+    "resource": "blog",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "updated_at": "2025-11-02T21:43:00.441Z"
+    },
+    "after": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    },
+    "timestamp": "2025-11-02T21:46:23.308Z"
+  },
+  {
+    "id": "45d4eeb0-d180-47d1-bef5-fa7ef14d9b7d",
+    "resource": "blog",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "updated_at": "2025-11-02T21:42:50.484Z"
+    },
+    "after": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    },
+    "timestamp": "2025-11-02T21:43:00.502Z"
+  },
+  {
+    "id": "1f97dd19-d993-4ba9-b495-8d36c23f884e",
+    "resource": "blog",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "updated_at": "2025-11-02T21:42:34.995Z"
+    },
+    "after": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    },
+    "timestamp": "2025-11-02T21:42:50.553Z"
+  },
+  {
+    "id": "69d9311f-dbc3-4622-b994-e313e6e1ad20",
+    "resource": "blog",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "updated_at": "2025-11-02T21:42:20.862Z"
+    },
+    "after": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    },
+    "timestamp": "2025-11-02T21:42:35.129Z"
+  },
+  {
+    "id": "8e39bfd7-787e-4af4-a677-5fe90d3f0c12",
+    "resource": "blog",
+    "action": "update",
+    "userId": "admin",
+    "before": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02T21:42:10.722Z",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ],
+      "updated_at": "2025-11-02T21:42:10.925Z"
+    },
+    "after": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    },
+    "timestamp": "2025-11-02T21:42:20.996Z"
+  },
+  {
+    "id": "47196066-7e26-443a-87a6-2a16562b68c8",
+    "resource": "blog",
+    "action": "create",
+    "userId": "admin",
+    "after": {
+      "slug": "xxxxxxxxxxxxxxxxxxxxxxxxx",
+      "title": "xxxxxxxxxxxxxxxxxx",
+      "blurb": "xxxxxxxxxxxxxxxxxxxxxxxxxxxxxxx",
+      "author": "xxxxxxxxxxxxxxxxx",
+      "published_at": "2025-11-02T21:42:10.722Z",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "xxxxxxxxxxxxxxxxxxxxx",
+        "xxxxxxxxxxxxxxxxxxxxxx"
+      ]
+    },
+    "timestamp": "2025-11-02T21:42:11.024Z"
+  },
+  {
+    "id": "fc514078-ec31-4b03-a98c-8598223f2396",
+    "resource": "blog",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "description_points": [],
+      "estimated_read_duration": "",
+      "author": "Trinix Lab",
+      "publication_date": "",
+      "blurb": "Harnessing Vedic threat modeling for self-healing clusters.",
+      "published_at": "2025-04-12",
+      "title": "Aurora Glow: Rethinking Kubernetes Security Posture",
+      "slug": "k8s-glow-security",
+      "updated_at": "2025-11-02T21:31:20.223Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-02T21:39:55.900Z"
+  },
+  {
+    "id": "2810df84-7e85-4bd6-b1d1-5755cdbe7ab4",
+    "resource": "blog",
+    "action": "create",
+    "userId": "admin",
+    "after": {
+      "slug": "jsdjsndjsndjsnjdjnsdjsjdnsjd",
+      "title": "jsdjsndjsndjsnjdjnsdjsjdnsjd",
+      "blurb": "zzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzzz",
+      "author": "sdsjdjsjdsjdjsjdjs",
+      "published_at": "2025-03-07",
+      "publication_date": "2025-04-30",
+      "estimated_read_duration": "5 min read",
+      "description_points": [
+        "jdjngjfngjfngjnfjgn",
+        "djgnfjngjfngjfngjn"
+      ]
+    },
+    "timestamp": "2025-11-02T21:31:20.327Z"
+  },
+  {
+    "id": "cac8f4e2-2108-49ad-8d47-f939e3e8b4a5",
+    "resource": "blog",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "slug": "k8s-glow-security",
+      "title": "Aurora Glow: Rethinking Kubernetes Security Posture",
+      "blurb": "Harnessing Vedic threat modeling for self-healing clusters.",
+      "author": "Trinix Lab",
+      "published_at": "2025-04-12",
+      "publication_date": "",
+      "estimated_read_duration": "",
+      "description_points": [],
+      "updated_at": "2025-11-02T21:27:49.956Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-02T21:30:01.902Z"
+  },
+  {
+    "id": "9238b159-dbd7-469f-9324-dfa2e841faf4",
+    "resource": "blog",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "slug": "k8s-glow-security",
+      "title": "Aurora Glow: Rethinking Kubernetes Security Posture",
+      "blurb": "Harnessing Vedic threat modeling for self-healing clusters.",
+      "author": "Trinix Lab",
+      "published_at": "2025-04-12",
+      "publication_date": "",
+      "estimated_read_duration": "",
+      "description_points": [],
+      "updated_at": "2025-11-02T21:27:49.956Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-02T21:29:39.062Z"
+  },
+  {
     "id": "116e9643-7def-434b-9bc2-a95b4dba06d7",
-    "timestamp": "2025-10-22T20:26:42.954Z",
     "resource": "careers",
     "action": "create",
     "userId": "admin",
@@ -12,11 +1582,11 @@
       "type": "Internship",
       "description": "interesting role",
       "link": "https://example.com/"
-    }
+    },
+    "timestamp": "2025-10-22T20:26:42.954Z"
   },
   {
     "id": "5ebe99ee-d2b1-431e-abbc-ae3dd7c7f172",
-    "timestamp": "2025-10-22T20:07:09.457Z",
     "resource": "projects",
     "action": "create",
     "userId": "admin",
@@ -43,11 +1613,11 @@
           "href": "/coming-soon"
         }
       ]
-    }
+    },
+    "timestamp": "2025-10-22T20:07:09.457Z"
   },
   {
     "id": "e06428a0-5a38-420a-98f0-39b1f4cbcad1",
-    "timestamp": "2025-10-22T20:02:23.604Z",
     "resource": "projects",
     "action": "update",
     "userId": "admin",
@@ -98,11 +1668,11 @@
           "href": "/coming-soon"
         }
       ]
-    }
+    },
+    "timestamp": "2025-10-22T20:02:23.604Z"
   },
   {
     "id": "f73fbd38-1ca8-4bb3-ac6b-fd520b73966e",
-    "timestamp": "2025-10-22T19:42:11.377Z",
     "resource": "blog",
     "action": "delete",
     "userId": "admin",
@@ -113,11 +1683,11 @@
       "author": "myself",
       "published_at": "2025-10-23"
     },
-    "after": null
+    "after": null,
+    "timestamp": "2025-10-22T19:42:11.377Z"
   },
   {
     "id": "ec160d18-e80a-43da-851c-ad4ef88aa126",
-    "timestamp": "2025-10-22T19:36:37.746Z",
     "resource": "blog",
     "action": "update",
     "userId": "admin",
@@ -136,11 +1706,11 @@
       "published_at": "2025-10-23",
       "publication_date": "2025-10-07",
       "estimated_read_duration": "5 mins"
-    }
+    },
+    "timestamp": "2025-10-22T19:36:37.746Z"
   },
   {
     "id": "e1e8bf85-8f7e-4509-93b2-57bf8d792325",
-    "timestamp": "2025-10-22T19:34:35.178Z",
     "resource": "blog",
     "action": "create",
     "userId": "admin",
@@ -152,11 +1722,11 @@
       "published_at": "2025-10-23",
       "publication_date": "2025-10-21",
       "estimated_read_duration": "5 mins"
-    }
+    },
+    "timestamp": "2025-10-22T19:34:35.178Z"
   },
   {
     "id": "14227c8a-ff08-4e4a-988f-1f8748da85ca",
-    "timestamp": "2025-10-20T18:42:06.851Z",
     "resource": "blog",
     "action": "delete",
     "userId": "admin",
@@ -167,6 +1737,7 @@
       "author": "Trinix Lab",
       "published_at": "2025-07-12"
     },
-    "after": null
+    "after": null,
+    "timestamp": "2025-10-20T18:42:06.851Z"
   }
 ]

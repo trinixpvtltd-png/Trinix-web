@@ -1,6 +1,6 @@
 "use client";
 
-import { useState } from "react";
+import { useActionState, useState } from "react";
 import { useFormState } from "react-dom";
 
 import type { JobRole } from "@/types/content";
@@ -16,8 +16,8 @@ type Props = {
 
 export function JobRow({ job }: Props) {
   const [isEditing, setIsEditing] = useState(false);
-  const [updateState, updateAction] = useFormState(upsertJob, INITIAL_STATE);
-  const [deleteState, deleteAction] = useFormState(deleteJob, INITIAL_STATE);
+  const [updateState, updateAction] = useActionState(upsertJob, INITIAL_STATE);
+  const [deleteState, deleteAction] = useActionState(deleteJob, INITIAL_STATE);
 
   return (
     <>

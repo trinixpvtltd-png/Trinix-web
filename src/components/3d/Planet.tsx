@@ -10,23 +10,39 @@ type PlanetProps = {
   id: string;
   name: string;
   index: number;
-  orbitRadius: number; // world units
-  orbitHeight?: number; // per-planet orbit Y offset
+  orbitRadius: number;
+  orbitHeight?: number;
   color: string;
   cloudTint?: string;
   atmTint?: string;
   multiTint?: string[];
-  size?: number; // radius
-  speed?: number; // multiplier
+  size?: number;
+  speed?: number;
   onClick?: (id: string, position: Vector3) => void;
   onHoverChange?: (id: string, hovered: boolean) => void;
   active?: boolean;
   focused?: boolean;
-  // When true, suppress rendering of the floating HTML label
   hideLabel?: boolean;
 };
 
-export function Planet({ id, name, index, orbitRadius, orbitHeight = 0, color, cloudTint, atmTint, multiTint, size = 0.7, speed = 1, onClick, onHoverChange, active = false, focused = false, hideLabel = false }: PlanetProps) {
+export function Planet({
+  id,
+  name,
+  index,
+  orbitRadius,
+  orbitHeight = 0,
+  color,
+  cloudTint,
+  atmTint,
+  multiTint,
+  size = 0.7,
+  speed = 1,
+  onClick,
+  onHoverChange,
+  active = false,
+  focused = false,
+  hideLabel = false,
+}: PlanetProps) {
   const groupRef = useRef<Group>(null!);
   const meshRef = useRef<Mesh>(null!);
   const labelRef = useRef<Group>(null!);
@@ -34,82 +50,70 @@ export function Planet({ id, name, index, orbitRadius, orbitHeight = 0, color, c
   const cloudsRef = useRef<THREE.ShaderMaterial>(null!);
   const [hovered, setHovered] = useState(false);
 
-  const baseGeometry = useMemo(() => new THREE.SphereGeometry(1, 48, 48), []);
+  const baseGeometry = useMemo(() => new THREE.SphereGeometry(1, 64, 64), []);
   useEffect(() => () => baseGeometry.dispose(), [baseGeometry]);
 
   const planetMaterial = useMemo(() => {
-    return new THREE.MeshStandardMaterial({
+    const mat = new THREE.MeshStandardMaterial({
       color,
       metalness: 0.3,
       roughness: 0.55,
       emissive: new THREE.Color(color),
       emissiveIntensity: 0.1,
-      envMapIntensity: 1,
     });
-  }, [color]);
-  useEffect(() => () => planetMaterial.dispose(), [planetMaterial]);
 
-  type CloudsUniforms = { uTime: { value: number }; uTint: { value: THREE.Color } };
-  type AtmosUniforms = { uColor: { value: THREE.Color } };
+    mat.onBeforeCompile = (shader) => {
+      shader.fragmentShader = shader.fragmentShader.replace(
+        `#include <dithering_fragment>`,
+        `
+          vec3 lightDir = normalize(vec3(0.4, 0.8, 0.6));
+          float diff = max(dot(normalize(vNormal), lightDir), 0.0);
+          diff = smoothstep(0.0, 1.0, diff);
+          gl_FragColor.rgb *= clamp(0.55 + diff * 0.65, 0.55, 1.0);
+          #include <dithering_fragment>
+        `
+      );
+    };
+    return mat;
+  }, [color]);
+
+  useEffect(() => () => planetMaterial.dispose(), [planetMaterial]);
 
   const initialPhase = useMemo(() => (index / 8) * Math.PI * 2, [index]);
   const angleRef = useRef<number>(initialPhase);
 
   useFrame(({ clock }, delta) => {
-    // Freeze orbital motion when hovered for easier clicking
+    const t = clock.getElapsedTime();
     const speedMul = hovered ? 0 : 1;
-    const base = 0.2 * speed;
-    angleRef.current += delta * base * speedMul;
+    angleRef.current += delta * 0.2 * speed * speedMul;
+
     const angle = angleRef.current;
     const x = orbitRadius * Math.cos(angle);
     const z = orbitRadius * 0.7 * Math.sin(angle);
-    if (groupRef.current) {
-      groupRef.current.position.set(x, orbitHeight, z);
-      groupRef.current.rotation.y = angle;
-    }
+    groupRef.current.position.set(x, orbitHeight, z);
+    groupRef.current.rotation.y = angle;
+
     if (meshRef.current) {
-      const t = clock.getElapsedTime();
       meshRef.current.rotation.y = t * 0.6;
       meshRef.current.rotation.x = 0.08 * Math.sin(t * 0.45);
       const breathe = 1 + 0.015 * Math.sin(t * 0.8 + index);
       let scaleMul = breathe;
-      if (hovered) {
-        const hoverFactor = size > 0 ? (size + 1) / size : 1;
-        scaleMul *= hoverFactor;
-      } else if (active || focused) {
-        scaleMul *= 1.06;
-      }
+      if (hovered) scaleMul *= 1.08;
+      else if (active || focused) scaleMul *= 1.06;
       meshRef.current.scale.setScalar(scaleMul * size);
     }
 
-    const mat = planetMaterial;
-    if (mat) {
-      const t = clock.getElapsedTime();
+    if (planetMaterial) {
       const baseEmissive = 0.12;
       const pulse = 0.08 * (0.5 + 0.5 * Math.sin(t * 1.2 + index));
       const extra = hovered ? 0.2 : active || focused ? 0.12 : 0;
-      mat.emissiveIntensity = baseEmissive + pulse + extra;
+      planetMaterial.emissiveIntensity = baseEmissive + pulse + extra;
     }
-    // animate cloud layer
+
     if (cloudsRef.current) {
-      const t = clock.getElapsedTime();
-      (cloudsRef.current.uniforms as CloudsUniforms).uTime.value = t;
-      if (multiTint && multiTint.length > 1) {
-        const speed = 0.15;
-        const seg = (t * speed) % multiTint.length;
-        const i0 = Math.floor(seg);
-        const i1 = (i0 + 1) % multiTint.length;
-        const f = seg - i0;
-        const c0 = new THREE.Color(multiTint[i0]);
-        const c1 = new THREE.Color(multiTint[i1]);
-        const r = THREE.MathUtils.lerp(c0.r, c1.r, f);
-        const g = THREE.MathUtils.lerp(c0.g, c1.g, f);
-        const b = THREE.MathUtils.lerp(c0.b, c1.b, f);
-        (cloudsRef.current.uniforms as CloudsUniforms).uTint.value.setRGB(r, g, b);
-        (atmosRef.current.uniforms as AtmosUniforms).uColor.value.setRGB(r, g, b);
-      }
+      (cloudsRef.current.uniforms as any).uTime.value = t;
     }
-    // Label stays centered on the globe (no orbital motion) and scales with planet size
+
     if (labelRef.current) {
       const scale = THREE.MathUtils.clamp(0.6 + size * 0.6, 0.9, 3.2);
       labelRef.current.scale.setScalar(scale);
@@ -118,8 +122,12 @@ export function Planet({ id, name, index, orbitRadius, orbitHeight = 0, color, c
 
   return (
     <group ref={groupRef}>
+      {/* Core planet */}
       <mesh
         ref={meshRef}
+        geometry={baseGeometry}
+        material={planetMaterial}
+        scale={size}
         onPointerOver={(e) => {
           e.stopPropagation();
           setHovered(true);
@@ -132,57 +140,55 @@ export function Planet({ id, name, index, orbitRadius, orbitHeight = 0, color, c
         }}
         onClick={(e) => {
           e.stopPropagation();
-          if (onClick && groupRef.current) onClick(id, groupRef.current.position.clone());
+          if (onClick && groupRef.current)
+            onClick(id, groupRef.current.position.clone());
         }}
-        geometry={baseGeometry}
-        material={planetMaterial}
-        scale={size}
       />
 
-      {/* Visual-only atmosphere rim and subtle cloud layer (do not affect logic) */}
-      <mesh scale={1.08 * size} raycast={() => null}>
+      {/* Atmosphere */}
+      <mesh scale={1.06 * size} raycast={() => null}>
         <primitive object={baseGeometry} attach="geometry" />
         <shaderMaterial
           ref={atmosRef}
           transparent
           depthWrite={false}
-          depthTest={false}
-          side={THREE.DoubleSide}
-          blending={THREE.AdditiveBlending}
-          uniforms={{ uColor: { value: new THREE.Color(atmTint ?? color) } }}
+          side={THREE.BackSide}
+          blending={THREE.NormalBlending}
+          uniforms={{
+            uColor: { value: new THREE.Color(atmTint ?? color) },
+          }}
           vertexShader={`
             varying vec3 vNormal;
-            varying vec3 vViewDir;
             void main(){
-              vec4 mvPosition = modelViewMatrix * vec4(position,1.0);
               vNormal = normalize(normalMatrix * normal);
-              vViewDir = normalize(-mvPosition.xyz);
-              gl_Position = projectionMatrix * mvPosition;
+              gl_Position = projectionMatrix * modelViewMatrix * vec4(position,1.0);
             }
           `}
           fragmentShader={`
             varying vec3 vNormal;
-            varying vec3 vViewDir;
             uniform vec3 uColor;
             void main(){
-              float ndv = max(0.0, dot(normalize(vNormal), normalize(vViewDir)));
-              float rim = pow(1.0 - ndv, 2.0);
-              vec3 col = uColor * 1.4 * rim;
-              gl_FragColor = vec4(col, rim * 0.5);
+              float intensity = pow(0.6 - dot(vNormal, vec3(0.0, 0.0, 1.0)), 3.0);
+              intensity = clamp(intensity, 0.0, 1.0);
+              gl_FragColor = vec4(uColor * intensity * 1.6, intensity * 0.45);
             }
           `}
         />
       </mesh>
-      <mesh scale={1.03 * size} raycast={() => null}>
+
+      {/* Cloud layer */}
+      <mesh scale={1.02 * size} raycast={() => null}>
         <primitive object={baseGeometry} attach="geometry" />
         <shaderMaterial
           ref={cloudsRef}
           transparent
           depthWrite={false}
-          depthTest={false}
           side={THREE.DoubleSide}
-          blending={THREE.AdditiveBlending}
-          uniforms={{ uTime: { value: 0 }, uTint: { value: new THREE.Color(cloudTint ?? color) } }}
+          blending={THREE.NormalBlending}
+          uniforms={{
+            uTime: { value: 0 },
+            uTint: { value: new THREE.Color(cloudTint ?? color) },
+          }}
           vertexShader={`
             varying vec3 vPos;
             void main(){
@@ -214,7 +220,7 @@ export function Planet({ id, name, index, orbitRadius, orbitHeight = 0, color, c
         />
       </mesh>
 
-      {/* Planet name label (original style) */}
+      {/* Label */}
       {!hideLabel && (
         <group ref={labelRef} position={[0, 0, 0]} raycast={() => null}>
           <Html center transform style={{ pointerEvents: "none" }}>
@@ -224,10 +230,7 @@ export function Planet({ id, name, index, orbitRadius, orbitHeight = 0, color, c
           </Html>
         </group>
       )}
-
-      {/** Removed halo overlay to prevent any glass/overlay effect over the globe */}
-
-      {/* Removed near-planet focused card (kept horizontal bar in ProjectUniverse) */}
     </group>
   );
 }
+

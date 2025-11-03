@@ -1,9 +1,9 @@
 "use client";
 
 import { motion, AnimatePresence } from "framer-motion";
-import { useState } from "react";
-
-import jobs from "@/data/jobs.json";
+import { useState, useEffect } from "react";
+import { collection, getDocs, query, orderBy } from "firebase/firestore";
+import { db } from "@/server/firebase/client";
 import { JobCard } from "@/components/JobCard";
 import type { JobRole } from "@/types/content";
 
@@ -14,11 +14,36 @@ const LIFE_AT_TRINIX = [
 ];
 
 export default function CareersPage() {
-  const jobRoles = jobs as JobRole[];
+  const [jobRoles, setJobRoles] = useState<JobRole[]>([]);
   const [selectedRole, setSelectedRole] = useState<JobRole | null>(null);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchJobs = async () => {
+      try {
+        const q = query(collection(db, "jobs"), orderBy("title"));
+        const snapshot = await getDocs(q);
+
+        const fetched: JobRole[] = snapshot.docs.map((doc) => {
+          const data = doc.data() as JobRole;
+          const { id: _ignored, ...rest } = data;
+          return { id: doc.id, ...rest };
+        });
+
+        setJobRoles(fetched);
+      } catch (err) {
+        console.error("Failed to fetch jobs:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchJobs();
+  }, []);
 
   return (
     <div className="mx-auto flex max-w-6xl flex-col gap-16 px-6 py-20 text-white">
+      {/* Hero / Intro Section */}
       <motion.section
         className="space-y-6"
         initial={{ opacity: 0, y: 32 }}
@@ -30,10 +55,11 @@ export default function CareersPage() {
           <p className="text-xs uppercase tracking-[0.4em] text-aurora-teal/70">Join The Pods</p>
           <h1 className="font-display text-4xl font-semibold">Careers</h1>
           <p className="max-w-3xl text-base text-white/70">
-            We are assembling cross-disciplinary crews for quantum-ready, AI-aligned problem spaces. The roles below are
-            placeholders to signal the range of talent Trinix collaborates with.
+            We are assembling cross-disciplinary crews for quantum-ready, AI-aligned problem spaces.
+            The roles below are placeholders to signal the range of talent Trinix collaborates with.
           </p>
         </div>
+
         <div className="rounded-3xl border border-white/10 bg-white/5 p-8 text-sm text-white/70 backdrop-blur-2xl">
           <p className="font-display text-lg text-white">Life at Trinix (Placeholder)</p>
           <div className="mt-6 grid gap-4 md:grid-cols-3">
@@ -53,6 +79,7 @@ export default function CareersPage() {
         </div>
       </motion.section>
 
+      {/* Jobs Section */}
       <motion.section
         className="space-y-8"
         initial={{ opacity: 0, y: 32 }}
@@ -61,21 +88,29 @@ export default function CareersPage() {
         transition={{ delay: 0.1, duration: 0.6 }}
       >
         <h2 className="font-display text-3xl font-semibold">Open Roles</h2>
-        <div className="grid gap-6 md:grid-cols-3">
-          {jobRoles.map((job) => (
-            <JobCard
-              key={job.id}
-              title={job.title}
-              location={job.location}
-              type={job.type}
-              description={job.description}
-              link={job.link}
-              onApply={() => setSelectedRole(job)}
-            />
-          ))}
-        </div>
+
+        {loading ? (
+          <div className="text-center text-white/70">Loading job openings...</div>
+        ) : jobRoles.length > 0 ? (
+          <div className="grid gap-6 md:grid-cols-3">
+            {jobRoles.map((job) => (
+              <JobCard
+                key={job.id}
+                title={job.title}
+                location={job.location}
+                type={job.type}
+                description={job.description}
+                link={job.link}
+                onApply={() => setSelectedRole(job)}
+              />
+            ))}
+          </div>
+        ) : (
+          <p className="text-white/60">No open roles available right now.</p>
+        )}
       </motion.section>
 
+      {/* Apply Modal */}
       <AnimatePresence>
         {selectedRole && (
           <motion.div
@@ -93,8 +128,12 @@ export default function CareersPage() {
             >
               <div className="flex items-start justify-between gap-4">
                 <div>
-                  <p className="text-xs uppercase tracking-[0.35em] text-aurora-teal/70">Apply Placeholder</p>
-                  <h3 className="mt-2 font-display text-2xl font-semibold">{selectedRole.title}</h3>
+                  <p className="text-xs uppercase tracking-[0.35em] text-aurora-teal/70">
+                    Apply Placeholder
+                  </p>
+                  <h3 className="mt-2 font-display text-2xl font-semibold">
+                    {selectedRole.title}
+                  </h3>
                   <p className="mt-2 text-sm text-white/70">
                     {selectedRole.location} • {selectedRole.type}
                   </p>
@@ -109,7 +148,8 @@ export default function CareersPage() {
               </div>
 
               <p className="mt-6 text-sm text-white/70">
-                This modal reserves space for the full apply flow with validation, upload widgets, and confirmation states.
+                This modal reserves space for the full apply flow with validation,
+                upload widgets, and confirmation states.
               </p>
             </motion.div>
           </motion.div>

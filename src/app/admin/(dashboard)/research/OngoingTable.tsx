@@ -1,5 +1,4 @@
 import type { ResearchCatalogue } from "@/server/data/researchStore";
-
 import { OngoingRow } from "./OngoingRow";
 
 type Props = {
@@ -12,7 +11,7 @@ export function OngoingTable({ entries }: Props) {
   if (!list.length) {
     return (
       <section className="rounded-2xl border border-dashed border-white/20 bg-white/5 p-6 text-sm text-white/60">
-        No ongoing initiatives logged yet. Capture the current roadmap using the form above.
+        No ongoing projects yet. Use the form above to stage one.
       </section>
     );
   }
@@ -23,8 +22,9 @@ export function OngoingTable({ entries }: Props) {
         <thead className="bg-white/5 uppercase tracking-[0.2em] text-white/60">
           <tr>
             <th scope="col" className="px-4 py-3">Title</th>
-            <th scope="col" className="px-4 py-3">Next Milestone</th>
-            <th scope="col" className="px-4 py-3">ETA</th>
+            <th scope="col" className="px-4 py-3">Server</th>
+            <th scope="col" className="px-4 py-3">Identifier</th>
+            <th scope="col" className="px-4 py-3">Version Date</th>
             <th scope="col" className="px-4 py-3 text-right">Actions</th>
           </tr>
         </thead>
@@ -37,3 +37,4 @@ export function OngoingTable({ entries }: Props) {
     </section>
   );
 }
+
