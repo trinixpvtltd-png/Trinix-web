@@ -24,6 +24,19 @@ ADMIN_ROLES=admin,editor
 ADMIN_USER_ID=admin
 NEXTAUTH_SECRET=change-me
 NEXTAUTH_URL=http://localhost:3000
+NEXT_PUBLIC_FIREBASE_API_KEY=your_api_key_here
+NEXT_PUBLIC_FIREBASE_AUTH_DOMAIN=your_project.firebaseapp.com
+NEXT_PUBLIC_FIREBASE_PROJECT_ID=your_project
+NEXT_PUBLIC_FIREBASE_STORAGE_BUCKET=your_project.appspot.com
+NEXT_PUBLIC_FIREBASE_MESSAGING_SENDER_ID=your_sender_id
+NEXT_PUBLIC_FIREBASE_APP_ID=your_app_id
+NEXT_PUBLIC_FIREBASE_MEASUREMENT_ID=your_measurement_id
+
+FIREBASE_PRIVATE_KEY="-----BEGIN PRIVATE KEY-----\n<your_private_key>\n-----END PRIVATE KEY-----"
+UPLOADTHING_TOKEN=your_uploadthing_token
+RESEND_API_KEY=your_resend_key
+CONTACT_RECIPIENT=your_email@example.com
+
 ```
 
 ## Scripts
