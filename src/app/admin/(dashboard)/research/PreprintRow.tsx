@@ -23,7 +23,7 @@ export function PreprintRow({ entry }: Props) {
   const [updateState, updateAction] = useActionState(upsertResearchEntry, INITIAL_STATE);
   const [deleteState, deleteAction] = useActionState(deleteResearchEntry, INITIAL_STATE);
   const [file, setFile] = useState<File | null>(null);
-  const [showFileInput, setShowFileInput] = useState(!entry.pdf); // show input if no file yet
+  const [showFileInput, setShowFileInput] = useState(!entry.pdf);
 
   return (
     <>

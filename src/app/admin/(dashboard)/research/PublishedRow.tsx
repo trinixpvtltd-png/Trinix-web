@@ -111,8 +111,6 @@ export function PublishedRow({ entry }: Props) {
                     </p>
                   )}
                 </div>
-
-                {/* DOI / Link */}
                 <div>
                   <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
                     DOI / Link
@@ -125,7 +123,6 @@ export function PublishedRow({ entry }: Props) {
                   />
                 </div>
 
-                {/* Open Access Checkbox */}
                 <div className="flex items-center gap-2">
                   <input
                     name="open_access"
@@ -138,7 +135,6 @@ export function PublishedRow({ entry }: Props) {
                   </label>
                 </div>
 
-                {/* Authors */}
                 <div>
                   <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
                     Authors
@@ -151,8 +147,6 @@ export function PublishedRow({ entry }: Props) {
                     className="mt-1 w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
                   />
                 </div>
-
-                {/* Domains */}
                 <div>
                   <label className="block text-xs uppercase tracking-[0.2em] text-white/60">
                     Domains
@@ -165,15 +159,12 @@ export function PublishedRow({ entry }: Props) {
                     className="mt-1 w-full rounded-lg border border-white/10 bg-black/60 px-3 py-2 text-sm text-white outline-none focus:border-aurora-teal/60"
                   />
                 </div>
-
-                {/* Messages */}
                 {updateState.message && (
                   <p className="md:col-span-2 text-xs text-aurora-rose">
                     {updateState.message}
                   </p>
                 )}
 
-                {/* Buttons */}
                 <div className="md:col-span-2 flex justify-end gap-2">
                   <button
                     type="button"
@@ -186,7 +177,6 @@ export function PublishedRow({ entry }: Props) {
                 </div>
               </form>
 
-              {/* 🗑️ DELETE FORM */}
               <form
                 action={deleteAction}
                 onSubmit={(event) => {
