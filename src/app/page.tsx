@@ -2,16 +2,16 @@
 
 import { motion } from "framer-motion";
 import Link from "next/link";
-import { useMemo } from "react";
+import { useEffect, useMemo, useState } from "react";
 import { useRouter } from "next/navigation";
-
+import { db } from "@/server/firebase/client";
 import { AnimatedBackground } from "@/components/AnimatedBackground";
-import projects from "@/data/projects.json";
+
 import { POSTS } from "@/data/blogPosts";
 import { formatDate } from "@/lib/formatDate";
 import { resolveProjectHref } from "@/lib/projectLinks";
 import type { Project } from "@/types/content";
-import researchPublications from "@/../public/data/research_publications.json";
+import { collection, getDocs } from "firebase/firestore";
 
 type ResearchPublication = {
   id: string;
@@ -52,11 +52,59 @@ type ResearchHighlight =
   | { category: "On-going"; item: ResearchOngoing };
 
 export default function Home() {
-  const projectEntries = projects as Project[];
-  const featuredProjects = useMemo(() => selectFeaturedProjects(projectEntries), [projectEntries]);
-  const latestPosts = useMemo(() => selectLatestPosts(POSTS, 6), []);
-  const researchHighlights = useMemo(() => selectResearchHighlights(researchPublications as ResearchDataset, 3), []);
   const router = useRouter();
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [researchData, setResearchData] = useState<ResearchDataset>({});
+  const [latestPosts, setLatestPosts] = useState<typeof POSTS>([]);
+
+
+  // 🔥 Fetch Firestore data
+  useEffect(() => {
+  async function loadData() {
+    try {
+      // --- Projects ---
+      const projectsSnap = await getDocs(collection(db, "projects"));
+      const projectList = projectsSnap.docs.map((d) => ({ id: d.id, ...d.data() })) as Project[];
+      setProjects(projectList);
+
+      // --- Research collections ---
+      const [pubSnap, preSnap, ongoingSnap] = await Promise.all([
+        getDocs(collection(db, "published")),
+        getDocs(collection(db, "preprints")),
+        getDocs(collection(db, "ongoing")),
+      ]);
+
+      setResearchData({
+        published: pubSnap.docs.map((d) => ({ id: d.id, ...d.data() })) as ResearchPublication[],
+        preprints: preSnap.docs.map((d) => ({ id: d.id, ...d.data() })) as ResearchPreprint[],
+        ongoing: ongoingSnap.docs.map((d) => ({ id: d.id, ...d.data() })) as ResearchOngoing[],
+      });
+
+      // --- Blog posts ---
+      const blogSnap = await getDocs(collection(db, "blog"));
+      const blogPosts = blogSnap.docs.map((d) => ({
+        slug: d.id,
+        ...d.data(),
+      })) as typeof POSTS;
+
+      // Sort and store blog posts in same structure used before
+      const formatted = selectLatestPosts(blogPosts, 6);
+      setLatestPosts(formatted);
+    } catch (err) {
+      console.error("Firestore fetch error:", err);
+    }
+  }
+
+  loadData();
+}, []);
+
+  const featuredProjects = useMemo(() => selectFeaturedProjects(projects), [projects]);
+  
+  const researchHighlights = useMemo(
+    () => selectResearchHighlights(researchData, 3),
+    [researchData]
+  );
+
 
   return (
     <div className="relative overflow-hidden">
@@ -253,7 +301,6 @@ export default function Home() {
                   <p className="text-sm text-white/70">{post.blurb}</p>
                   <div className="flex items-center justify-between text-xs uppercase tracking-[0.25em] text-white/50">
                     <span>{post.author}</span>
-                    <span>{post.publishedLabel}</span>
                   </div>
                   <Link
                     href={`/blog/${post.slug}`}

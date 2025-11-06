@@ -2,7 +2,7 @@ import { z } from "zod";
 import { adminDb } from "@/server/firebase/admin";
 import type { BlogPost } from "@/data/blogPosts";
 
-
+// ✅ (1) Define schema
 const blogSchema = z.object({
   slug: z.string(),
   title: z.string(),
@@ -70,12 +70,16 @@ export async function getBlogPost(slug: string): Promise<BlogPost | null> {
 // -------------------------------
 export async function updateBlogPosts<R>(
   mutator:
-    | ((current: BlogPost[]) => Promise<{ data: BlogPost[]; result: R }>)
+    | ((current: BlogPost[]) => Promise<{ data: BlogPost[]; result: R }> )
     | ((current: BlogPost[]) => { data: BlogPost[]; result: R })
 ): Promise<R> {
   // Load current posts
   const currentPosts = await readBlogPosts();
   const mutation = await mutator(currentPosts);
+
+  // ✅ Clean data before saving (remove undefined)
+  const sanitize = <T extends object>(obj: T) =>
+    Object.fromEntries(Object.entries(obj).filter(([_, v]) => v !== undefined));
 
   // Push all updated posts to Firestore
   const batch = adminDb.batch();
@@ -83,10 +87,15 @@ export async function updateBlogPosts<R>(
 
   for (const post of mutation.data) {
     const docRef = collectionRef.doc(post.slug);
-    batch.set(docRef, { ...post, updated_at: new Date().toISOString() }, { merge: true });
+    const cleanPost = sanitize(post);
+
+    batch.set(
+      docRef,
+      { ...cleanPost, updated_at: new Date().toISOString() },
+      { merge: true }
+    );
   }
 
   await batch.commit();
-
   return mutation.result;
 }

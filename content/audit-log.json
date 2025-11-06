@@ -1,5 +1,45 @@
 [
   {
+    "id": "90f45372-2c33-47d0-9af8-98f01f0a376b",
+    "resource": "blog",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "description_points": [
+        "helooo"
+      ],
+      "updated_at": "2025-11-06T19:33:35.276Z",
+      "estimated_read_duration": "4min read",
+      "author": "llllllllllll",
+      "publication_date": "",
+      "blurb": "aaaaaaaaaaaaaaaaaaaaaaa",
+      "published_at": "2025-02-05",
+      "title": "heloooooooo",
+      "slug": "kkkkkkkkkkk"
+    },
+    "after": null,
+    "timestamp": "2025-11-06T19:34:04.931Z"
+  },
+  {
+    "id": "1f41e396-21df-4fc1-abbe-47cdd8e59160",
+    "resource": "blog",
+    "action": "create",
+    "userId": "admin",
+    "after": {
+      "slug": "kkkkkkkkkkk",
+      "title": "heloooooooo",
+      "blurb": "aaaaaaaaaaaaaaaaaaaaaaa",
+      "author": "llllllllllll",
+      "published_at": "2025-02-05",
+      "publication_date": "",
+      "estimated_read_duration": "4min read",
+      "description_points": [
+        "helooo"
+      ]
+    },
+    "timestamp": "2025-11-06T19:33:35.437Z"
+  },
+  {
     "id": "f8aa6b65-5b27-4bb9-b168-99ade462b1be",
     "resource": "research-ongoing",
     "action": "delete",

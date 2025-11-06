@@ -1,15 +1,36 @@
-import { getApps, initializeApp, cert, getApp } from "firebase-admin/app";
+import { getApps, initializeApp, cert, getApp, App } from "firebase-admin/app";
 import { getFirestore } from "firebase-admin/firestore";
+import type { ServiceAccount } from "firebase-admin";
+
+let app: App;
 
 if (!getApps().length) {
-  initializeApp({
-    credential: cert({
-      projectId: process.env.FIREBASE_PROJECT_ID!,
-      clientEmail: process.env.FIREBASE_CLIENT_EMAIL!,
-      privateKey: process.env.FIREBASE_PRIVATE_KEY!.replace(/\\n/g, "\n"),
-    }),
+  const projectId = process.env.FIREBASE_PROJECT_ID;
+  const clientEmail = process.env.FIREBASE_CLIENT_EMAIL;
+  const privateKey = process.env.FIREBASE_PRIVATE_KEY?.replace(/\\n/g, "\n");
+
+  if (!projectId || !clientEmail || !privateKey) {
+    throw new Error("❌ Missing Firebase Admin environment variables.");
+  }
+
+  const serviceAccount: ServiceAccount = {
+    projectId,
+    clientEmail,
+    privateKey,
+  };
+
+  app = initializeApp({
+    credential: cert(serviceAccount),
   });
+} else {
+  app = getApp();
 }
 
-export const adminDb = getFirestore();
+const firestore = getFirestore(app);
 
+
+if (!getApps().length) {
+  firestore.settings({ ignoreUndefinedProperties: true });
+}
+
+export const adminDb = firestore;
