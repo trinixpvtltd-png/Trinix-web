@@ -15,9 +15,8 @@ export function ResearchHero() {
         Research Nexus
       </h1>
       <p className="text-base md:text-lg text-white/70 max-w-3xl">
-        Peer‑reviewed work, pre‑print discoveries, and on‑going investigations advancing Trinix R&amp;D.
+        Peer-reviewed work, pre-print discoveries, and on-going investigations advancing Trinix R&amp;D.
       </p>
     </motion.div>
   );
 }
-
