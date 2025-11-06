@@ -1,5 +1,5 @@
 "use client";
-import { collection, getDocs,onSnapshot } from "firebase/firestore";
+import { collection, onSnapshot } from "firebase/firestore";
 import { db } from "@/server/firebase/client";
 import { useCallback, useEffect, useMemo, useState, type ReactNode } from "react";
 import { ResearchHero } from "@/components/research/ResearchHero";
@@ -39,7 +39,7 @@ type PreprintPub = {
   abstract?: string;
 };
 
-type OngoingItem = PreprintPub; // ✅ Unified shape
+type OngoingItem = PreprintPub;
 
 type Data = {
   published: PublishedPub[];
@@ -48,6 +48,13 @@ type Data = {
 };
 
 const HASH_PREFIX = "pubs";
+
+/** 🧹 Normalize Firestore doc so authors is always an array */
+function normalizeAuthors(data: any): string[] {
+  if (Array.isArray(data?.authors)) return data.authors;
+  if (typeof data?.authors === "string" && data.authors.trim()) return [data.authors];
+  return ["Unknown Author"];
+}
 
 function ResearchModalLayout({
   titleId,
@@ -120,35 +127,56 @@ export function ResearchHub() {
     window.history.replaceState(null, "", url);
   }, [active]);
 
-  // --- Load research data
+  // --- Live Firestore listeners
   useEffect(() => {
-  const unsubPublished = onSnapshot(collection(db, "published"), (snap) =>
-    setData((prev) => ({
-      ...prev,
-      published: snap.docs.map((d) => ({ id: d.id, ...d.data() })) as PublishedPub[],
-    }))
-  );
+    const unsubPublished = onSnapshot(collection(db, "published"), (snap) =>
+      setData((prev) => ({
+        ...prev,
+        published: snap.docs.map((d) => {
+          const doc = d.data();
+          return {
+            id: d.id,
+            ...doc,
+            authors: normalizeAuthors(doc),
+          } as PublishedPub;
+        }),
+      }))
+    );
 
-  const unsubPreprints = onSnapshot(collection(db, "preprints"), (snap) =>
-    setData((prev) => ({
-      ...prev,
-      preprints: snap.docs.map((d) => ({ id: d.id, ...d.data() })) as PreprintPub[],
-    }))
-  );
+    const unsubPreprints = onSnapshot(collection(db, "preprints"), (snap) =>
+      setData((prev) => ({
+        ...prev,
+        preprints: snap.docs.map((d) => {
+          const doc = d.data();
+          return {
+            id: d.id,
+            ...doc,
+            authors: normalizeAuthors(doc),
+          } as PreprintPub;
+        }),
+      }))
+    );
 
-  const unsubOngoing = onSnapshot(collection(db, "ongoing"), (snap) =>
-    setData((prev) => ({
-      ...prev,
-      ongoing: snap.docs.map((d) => ({ id: d.id, ...d.data() })) as OngoingItem[],
-    }))
-  );
+    const unsubOngoing = onSnapshot(collection(db, "ongoing"), (snap) =>
+      setData((prev) => ({
+        ...prev,
+        ongoing: snap.docs.map((d) => {
+          const doc = d.data();
+          return {
+            id: d.id,
+            ...doc,
+            authors: normalizeAuthors(doc),
+          } as OngoingItem;
+        }),
+      }))
+    );
 
-  return () => {
-    unsubPublished();
-    unsubPreprints();
-    unsubOngoing();
-  };
-}, []);
+    return () => {
+      unsubPublished();
+      unsubPreprints();
+      unsubOngoing();
+    };
+  }, []);
 
   // --- Year filter options
   const yearOptions = useMemo(() => {
@@ -195,7 +223,7 @@ export function ResearchHub() {
     const q = filters.q.trim();
     const items = data.published.filter(
       (p) =>
-        (q ? textMatch(p.title || "", q) || textMatch((p.authors || []).join(", "), q) || textMatch(p.venue || "", q) : true) &&
+        (q ? textMatch(p.title || "", q) || textMatch(p.authors.join(", "), q) || textMatch(p.venue || "", q) : true) &&
         (filters.year ? String(p.year) === filters.year : true) &&
         (filters.domain ? arrMatch(p.domain, filters.domain) : true)
     );
@@ -206,7 +234,7 @@ export function ResearchHub() {
     const q = filters.q.trim();
     const items = data.preprints.filter(
       (p) =>
-        (q ? textMatch(p.title || "", q) || textMatch((p.authors || []).join(", "), q) || textMatch(p.server || "", q) : true) &&
+        (q ? textMatch(p.title || "", q) || textMatch(p.authors.join(", "), q) || textMatch(p.server || "", q) : true) &&
         (filters.domain ? arrMatch(p.domain, filters.domain) : true)
     );
     return sortBy(items, filters.sort as SortKey);
@@ -216,7 +244,7 @@ export function ResearchHub() {
     const q = filters.q.trim();
     const items = data.ongoing.filter(
       (p) =>
-        (q ? textMatch(p.title || "", q) || textMatch((p.authors || []).join(", "), q) || textMatch(p.server || "", q) : true) &&
+        (q ? textMatch(p.title || "", q) || textMatch(p.authors.join(", "), q) || textMatch(p.server || "", q) : true) &&
         (filters.domain ? arrMatch(p.domain, filters.domain) : true)
     );
     return sortBy(items, filters.sort as SortKey);
@@ -263,7 +291,6 @@ export function ResearchHub() {
           <PreprintList items={preFiltered} onOpen={openPreprint} />
         </section>
         <section hidden={active !== "ongoing"}>
-          {/* ✅ identical layout for ongoing */}
           <PreprintList items={ogFiltered} onOpen={openOngoing} />
         </section>
       </div>
@@ -284,7 +311,7 @@ export function ResearchHub() {
                 meta={meta}
                 onClose={closeModal}
               >
-                <ModalInfoBlock label="Authors">{p.authors?.join(", ") || "-"}</ModalInfoBlock>
+                <ModalInfoBlock label="Authors">{p.authors.join(", ")}</ModalInfoBlock>
                 {p.abstract && (
                   <ModalInfoBlock label="Abstract">
                     <p className="whitespace-pre-wrap">{p.abstract}</p>

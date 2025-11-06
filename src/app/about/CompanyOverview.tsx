@@ -1,9 +1,22 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 
 export function CompanyOverview() {
   const reduce = useReducedMotion();
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    if (reduce) {
+      setRevealed(true);
+      return;
+    }
+    let raf: number | null = null;
+    raf = requestAnimationFrame(() => setRevealed(true));
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+    };
+  }, [reduce]);
   return (
     <section
       role="region"
@@ -13,8 +26,7 @@ export function CompanyOverview() {
       <div className="grid md:grid-cols-1 gap-8 items-start">
         <motion.div
           initial={{ opacity: 0, y: reduce ? 0 : 12 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
+          animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: reduce ? 0 : 12 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
           className="space-y-5"
         >

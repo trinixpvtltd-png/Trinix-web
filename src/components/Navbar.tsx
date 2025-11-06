@@ -5,7 +5,8 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useMemo, useState } from "react";
 import Image from "next/image";
-import { Menu, X } from "lucide-react"; // for mobile icons
+import { Menu, X } from "lucide-react";
+import { useBackgroundReady } from "@/context/BackgroundReadyContext";
 
 const NAV_ITEMS = [
   { href: "/", label: "Home" },
@@ -20,6 +21,10 @@ const NAV_ITEMS = [
 export function Navbar() {
   const pathname = usePathname();
   const [menuOpen, setMenuOpen] = useState(false);
+  const { ready } = useBackgroundReady();
+
+  // ✅ Determine if we’re on the home page
+  const isHome = pathname === "/";
 
   const activeHref = useMemo(() => {
     if (!pathname) return "/";
@@ -30,7 +35,13 @@ export function Navbar() {
   }, [pathname]);
 
   return (
-    <header className="sticky top-0 z-50 border-b border-white/10 bg-cosmic-black/50 shadow-lg shadow-black/30 backdrop-blur-xl">
+    <motion.header
+      initial={{ opacity: 0 }}
+      // ✅ Only wait for "ready" on home page; always visible elsewhere
+      animate={{ opacity: !isHome || ready ? 1 : 0 }}
+      transition={{ duration: isHome ? 0.6 : 0 }}
+      className="sticky top-0 z-50 border-b border-white/10 bg-cosmic-black/50 shadow-lg shadow-black/30 backdrop-blur-xl"
+    >
       <nav className="mx-auto flex max-w-6xl items-center justify-between px-6 py-4">
         {/* Logo */}
         <Link href="/" className="flex items-center gap-3 text-white/80">
@@ -107,7 +118,6 @@ export function Navbar() {
           })}
         </motion.ul>
       )}
-    </header>
+    </motion.header>
   );
 }
-

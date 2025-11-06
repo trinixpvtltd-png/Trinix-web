@@ -15,11 +15,30 @@ const UniverseEmbed = dynamic(
       const C = () => <m.ProjectUniverse renderBelowDetails={true} />;
       return C;
     }),
-  { ssr: false, loading: () => null }
+  { ssr: false, loading: () => <UniversePlaceholder /> }
 );
 
 function slugify(s: string) {
   return s.toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/(^-|-$)/g, "");
+}
+
+function UniversePlaceholder() {
+  return (
+    <div className="relative" style={{ height: "120vh" }}>
+      <div className="sticky top-0 min-h-[92vh] h-screen w-screen overflow-hidden bg-[#01020a]">
+        <div className="absolute inset-0 bg-[radial-gradient(circle_at_center,rgba(96,234,255,0.08),transparent_65%)] blur-3xl" />
+        <div className="absolute inset-0 bg-[linear-gradient(120deg,rgba(61,245,242,0.1),rgba(240,179,90,0.08))]" />
+        <div className="relative z-10 flex h-full flex-col items-center justify-center gap-4 text-center text-white/70">
+          <p className="text-xs uppercase tracking-[0.35em] text-aurora-teal/80">Initializing</p>
+          <h2 className="text-2xl font-semibold">Preparing the Trinix Universe</h2>
+          <p className="max-w-md text-sm text-white/60">
+            Loading stellar shaders and orbital data. Hang tight - your interactive solar system is about to appear.
+          </p>
+          <div className="mt-4 h-10 w-10 animate-spin rounded-full border-2 border-white/20 border-t-aurora-teal/70" aria-hidden />
+        </div>
+      </div>
+    </div>
+  );
 }
 
 export default function ProjectsPage() {

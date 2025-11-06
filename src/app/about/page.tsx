@@ -1,12 +1,30 @@
 "use client";
 
 import { motion, useReducedMotion } from "framer-motion";
+import { useEffect, useState } from "react";
 import Link from "next/link";
 import { CompanyOverview } from "./CompanyOverview";
 import { MonolithsTimeline } from "./MonolithsTimeline";
 
+function useReveal(readyPreference: boolean) {
+  const [revealed, setRevealed] = useState(false);
+  useEffect(() => {
+    if (readyPreference) {
+      setRevealed(true);
+      return;
+    }
+    let raf: number | null = null;
+    raf = requestAnimationFrame(() => setRevealed(true));
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+    };
+  }, [readyPreference]);
+  return revealed;
+}
+
 export default function AboutPage() {
   const reduce = useReducedMotion();
+  const revealed = useReveal(!!reduce);
   return (
     <div className="pb-20">
       {/* Hero */}
@@ -15,8 +33,7 @@ export default function AboutPage() {
           <motion.h1
             className="font-[var(--font-poppins)] text-3xl sm:text-5xl font-semibold"
             initial={{ opacity: 0, y: reduce ? 0 : 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: reduce ? 0 : 10 }}
             transition={{ duration: 0.6, ease: "easeInOut" }}
           >
             About Trinix Private Limited
@@ -24,8 +41,7 @@ export default function AboutPage() {
           <motion.p
             className="text-white/80 mt-3"
             initial={{ opacity: 0, y: reduce ? 0 : 10 }}
-            whileInView={{ opacity: 1, y: 0 }}
-            viewport={{ once: true, amount: 0.6 }}
+            animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: reduce ? 0 : 10 }}
             transition={{ duration: 0.6, ease: "easeInOut", delay: 0.05 }}
           >
             We build transformative solutions by fusing research, technology, and entrepreneurship.
@@ -42,8 +58,7 @@ export default function AboutPage() {
         <motion.div
           className="glass rounded-2xl border border-white/10 p-6"
           initial={{ opacity: 0, y: reduce ? 0 : 10 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, amount: 0.4 }}
+          animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: reduce ? 0 : 10 }}
           transition={{ duration: 0.6, ease: "easeInOut" }}
         >
           <p className="text-white/85 leading-7">

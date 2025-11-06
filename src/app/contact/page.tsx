@@ -1,6 +1,6 @@
 "use client";
 
-import { motion } from "framer-motion";
+import { motion, useReducedMotion } from "framer-motion";
 import { useEffect, useMemo, useState } from "react";
 import type { ChangeEvent, FormEvent } from "react";
 import { MapPin, Phone, Mail } from "lucide-react"; // ✅ Lucide icons
@@ -35,12 +35,26 @@ function ContactSection() {
   const [errors, setErrors] = useState<ContactErrors>({});
   const [submitting, setSubmitting] = useState(false);
   const [toast, setToast] = useState<{ type: "success" | "error"; message: string } | null>(null);
+  const reduceMotion = useReducedMotion();
+  const [revealed, setRevealed] = useState(false);
 
   useEffect(() => {
     if (!toast) return;
     const id = window.setTimeout(() => setToast(null), 4000);
     return () => window.clearTimeout(id);
   }, [toast]);
+
+  useEffect(() => {
+    if (reduceMotion) {
+      setRevealed(true);
+      return;
+    }
+    let raf: number | null = null;
+    raf = requestAnimationFrame(() => setRevealed(true));
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+    };
+  }, [reduceMotion]);
 
   // ✅ Icons pulse + glow
   const infoBlocks = useMemo(
@@ -115,9 +129,8 @@ function ContactSection() {
       id="contact"
       className="max-w-6xl mx-auto px-6 md:px-10 py-16 md:py-24"
       aria-labelledby="contact-heading"
-      initial={{ opacity: 0, y: 32 }}
-      whileInView={{ opacity: 1, y: 0 }}
-      viewport={{ once: true, amount: 0.2 }}
+      initial={{ opacity: 0, y: reduceMotion ? 0 : 32 }}
+      animate={revealed ? { opacity: 1, y: 0 } : { opacity: 0, y: reduceMotion ? 0 : 32 }}
       transition={{ duration: 0.6 }}
     >
       <div className="space-y-4">

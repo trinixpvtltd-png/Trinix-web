@@ -9,6 +9,7 @@ import { NextSSRPlugin } from "@uploadthing/react/next-ssr-plugin";
 import { extractRouterConfig } from "uploadthing/server";
 import { uploadRouter } from "@/app/api/uploadthing/core";
 import "./globals.css";
+import { BackgroundReadyProvider } from "@/context/BackgroundReadyContext";
 
 const inter = Inter({ subsets: ["latin"], variable: "--font-inter" });
 const poppins = Poppins({ subsets: ["latin"], weight: ["400", "500", "600", "700"], variable: "--font-poppins" });
@@ -30,10 +31,12 @@ export default function RootLayout({
   return (
     <html lang="en" suppressHydrationWarning>
       <body suppressHydrationWarning className={`${inter.variable} ${poppins.variable} antialiased bg-cosmic-black/80 text-slate-100`}>
+      <div id="global-bg-fix" className="fixed inset-0 bg-[#0a0a0a] -z-20" />
          <NextSSRPlugin routerConfig={extractRouterConfig(uploadRouter)} />
         <CanvasStage>
           <SceneRouter />
         </CanvasStage>
+        <BackgroundReadyProvider>
         <div className="flex min-h-screen flex-col">
           <Navbar />
           <main className="relative flex-1 overflow-hidden">
@@ -41,6 +44,7 @@ export default function RootLayout({
           </main>
           <Footer />
         </div>
+        </BackgroundReadyProvider>
         <ChatBot />
       </body>
     </html>

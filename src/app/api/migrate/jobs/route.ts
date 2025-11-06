@@ -2,7 +2,7 @@ import { NextResponse } from "next/server";
 import { adminDb } from "@/server/firebase/admin";
 import type { JobRole } from "@/types/content";
 import jobs from "@/data/jobs.json";
-
+  // http://localhost:3000/api/migrate/jobs
 export async function GET() {
   try {
     const batch = adminDb.batch();

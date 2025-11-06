@@ -1,6 +1,6 @@
 import { NextResponse } from "next/server";
 import { adminDb } from "@/server/firebase/admin";
-import projects from "@/data/projects.json"; // 👈 path to your JSON file
+import projects from "@/data/projects.json";
 import type { Project } from "@/types/content";
 
 /**
@@ -8,6 +8,7 @@ import type { Project } from "@/types/content";
  * - Uploads all projects from local JSON into Firestore
  * - Uses project.id as Firestore document ID
  * - Skips if already exists (to prevent overwriting)
+ * // http://localhost:3000/api/migrate/projects
  */
 export async function GET() {
   try {

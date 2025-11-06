@@ -1,5 +1,103 @@
 [
   {
+    "id": "f8aa6b65-5b27-4bb9-b168-99ade462b1be",
+    "resource": "research-ongoing",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "venue": "Ongoing Research (Trinix Research)",
+      "version_date": "2025-10-30",
+      "abstract": "This study presents an overview of the Navarasa emotion theory—Shringara (love), Hasya (joy), Karuna (compassion), Raudra (anger), Veera (courage), Bhayanaka (fear), Bibhatsa (disgust), Adbhuta (wonder), and Shanta (peace)—and proposes a cognitive-AI framework for emotion detection, simulation, and empathy modeling. The framework connects traditional rasa theory with affective neuroscience and computational psychology to construct a multi-dimensional emotion-AI model capable of understanding and generating emotional responses aligned with human affective states. It emphasizes dataset formation based on physiological, linguistic, and contextual markers; multimodal emotion analysis (voice, facial data, semantics); and reinforcement feedback loops for AI empathy and behavior regulation. The research further outlines the mapping of Navarasa categories into vector representations for use in deep learning and conversational agents.",
+      "title": "Navarasa Emotion Intelligence Framework: Cognitive and Computational Emotion Modeling",
+      "pdf": "/ongoing/Overview of Navarasa.pdf",
+      "domain": [
+        "AI",
+        "Cognitive Science",
+        "Affective Computing"
+      ],
+      "open_access": false,
+      "id": "ongoing-navarasa-ai",
+      "slug": "ongoing-navarasa-ai",
+      "modal": {
+        "layout": "research-square",
+        "actions": [
+          {
+            "label": "Open PDF",
+            "href": "/ongoing/Overview of Navarasa.pdf",
+            "target": "_blank",
+            "variant": "primary"
+          },
+          {
+            "label": "Download",
+            "href": "/ongoing/Overview of Navarasa.pdf",
+            "download": true,
+            "variant": "secondary"
+          }
+        ],
+        "sections": {
+          "pdf_viewer": true,
+          "abstract": true,
+          "authors": true
+        }
+      },
+      "authors": [
+        "Trinix Research Team"
+      ],
+      "doi": "TRX-NAVARASA-2025-OG",
+      "updated_at": "2025-11-06T18:53:15.779Z",
+      "created_at": "2025-11-06T18:53:15.779Z"
+    },
+    "after": null,
+    "timestamp": "2025-11-06T18:54:36.747Z"
+  },
+  {
+    "id": "9367e566-a58f-4d8e-b176-563b75c3bff2",
+    "resource": "research-ongoing",
+    "action": "delete",
+    "userId": "admin",
+    "before": {
+      "id": "ongoing-navarasa-ai",
+      "title": "Navarasa Emotion Intelligence Framework: Cognitive and Computational Emotion Modeling",
+      "authors": [
+        "Trinix Research Team"
+      ],
+      "server": "Ongoing Research (Trinix Research)",
+      "identifier": "TRX-NAVARASA-2025-OG",
+      "version_date": "2025-10-30",
+      "abstract": "This study presents an overview of the Navarasa emotion theory—Shringara (love), Hasya (joy), Karuna (compassion), Raudra (anger), Veera (courage), Bhayanaka (fear), Bibhatsa (disgust), Adbhuta (wonder), and Shanta (peace)—and proposes a cognitive-AI framework for emotion detection, simulation, and empathy modeling. The framework connects traditional rasa theory with affective neuroscience and computational psychology to construct a multi-dimensional emotion-AI model capable of understanding and generating emotional responses aligned with human affective states. It emphasizes dataset formation based on physiological, linguistic, and contextual markers; multimodal emotion analysis (voice, facial data, semantics); and reinforcement feedback loops for AI empathy and behavior regulation. The research further outlines the mapping of Navarasa categories into vector representations for use in deep learning and conversational agents.",
+      "pdf": "/ongoing/Overview of Navarasa.pdf",
+      "domain": [
+        "AI",
+        "Cognitive Science",
+        "Affective Computing"
+      ],
+      "modal": {
+        "layout": "research-square",
+        "sections": {
+          "authors": true,
+          "abstract": true,
+          "pdf_viewer": true
+        },
+        "actions": [
+          {
+            "label": "Open PDF",
+            "href": "/ongoing/Overview of Navarasa.pdf",
+            "target": "_blank",
+            "variant": "primary"
+          },
+          {
+            "label": "Download",
+            "href": "/ongoing/Overview of Navarasa.pdf",
+            "download": true,
+            "variant": "secondary"
+          }
+        ]
+      }
+    },
+    "after": null,
+    "timestamp": "2025-11-06T18:16:45.652Z"
+  },
+  {
     "id": "d439030d-78c0-41e9-99df-e3a2b542f2e8",
     "resource": "research-published",
     "action": "delete",

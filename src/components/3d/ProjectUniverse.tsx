@@ -86,6 +86,10 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
   const visuals = useVisualsMode();
   const isMobile = typeof window !== "undefined" ? window.innerWidth < 768 : false;
   const [allowRender, setAllowRender] = useState(false);
+  const [enhancementsReady, setEnhancementsReady] = useState(false);
+  const shouldShowEnhancements = visuals === "enhanced" && enhancementsReady;
+  const starCount = enhancementsReady ? (isMobile ? 1800 : 5000) : (isMobile ? 900 : 2600);
+  const [motionReady, setMotionReady] = useState(false);
   const canvasRef = useRef<HTMLCanvasElement | null>(null);
 
   // Guard: ensure exactly one Canvas mount
@@ -97,8 +101,66 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
       setAllowRender(false);
       return;
     }
-    setAllowRender(true);
+    const win = typeof window !== "undefined" ? window : undefined;
+    let cancelled = false;
+    let idleHandle: number | null = null;
+    let timeoutHandle: ReturnType<typeof setTimeout> | null = null;
+    let rafHandle: number | null = null;
+
+    const enable = () => {
+      if (!cancelled) setAllowRender(true);
+    };
+
+    const queueEnable = () => {
+      rafHandle = requestAnimationFrame(enable);
+    };
+
+    if (win?.requestIdleCallback) {
+      idleHandle = win.requestIdleCallback(queueEnable, { timeout: 200 });
+    } else if (win) {
+      timeoutHandle = win.setTimeout(queueEnable, 100);
+    } else {
+      queueEnable();
+    }
+
+    return () => {
+      cancelled = true;
+      if (idleHandle != null && win?.cancelIdleCallback) {
+        win.cancelIdleCallback(idleHandle);
+      }
+      if (timeoutHandle != null && win) {
+        win.clearTimeout(timeoutHandle);
+      }
+      if (rafHandle != null) {
+        cancelAnimationFrame(rafHandle);
+      }
+    };
   }, []);
+
+  // Stagger heavy post-processing so first paint stays responsive
+  useEffect(() => {
+    if (!allowRender || typeof window === "undefined") return;
+    let raf: number | null = null;
+    let timeout: ReturnType<typeof setTimeout> | null = null;
+
+    raf = requestAnimationFrame(() => {
+      timeout = window.setTimeout(() => setEnhancementsReady(true), 220);
+    });
+
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+      if (timeout != null) window.clearTimeout(timeout);
+    };
+  }, [allowRender]);
+
+  useEffect(() => {
+    if (!allowRender || typeof window === "undefined") return;
+    let raf: number | null = null;
+    raf = requestAnimationFrame(() => setMotionReady(true));
+    return () => {
+      if (raf != null) cancelAnimationFrame(raf);
+    };
+  }, [allowRender]);
 
   const scheme = useMemo(() => {
     const byId: Record<string, { color: string; cloudTint?: string; atmTint?: string; multiTint?: string[] }> = {
@@ -260,16 +322,39 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
               gl.domElement.style.touchAction = "auto";
             }}
           >
-          {visuals === "enhanced" ? <Nebula /> : null}
+          {shouldShowEnhancements ? <Nebula /> : null}
           <color attach="background" args={["#00010a"]} />
           <ambientLight intensity={0.6} />
           <directionalLight position={[6, 6, 6]} intensity={0.35} />
           <pointLight position={[0, 0, 0]} color="#f0b35a" intensity={1.8} distance={260} decay={2} />
-          {visuals === "enhanced" ? <VisualEnvironment /> : null}
-          <StarsField count={isMobile ? 1800 : 5000} />
+          {shouldShowEnhancements ? <VisualEnvironment /> : null}
+          <StarsField count={starCount} />
           <Sun />
           {planets.map((pl, i) => {
             const isEmphasized = i === activeIndex || (!!focus && focus.id === pl.id) || hoveredId === pl.id;
+            const planetNode = (
+              <Planet
+                id={pl.id}
+                name={pl.name}
+                index={i}
+                orbitRadius={pl.radius}
+                orbitHeight={pl.height}
+                color={pl.color}
+                cloudTint={pl.cloudTint}
+                atmTint={pl.atmTint}
+                multiTint={pl.multiTint}
+                hideLabel={!!focus || i >= VISIBLE_LABELS_MAX}
+                size={pl.size}
+                speed={pl.speed}
+                active={i === activeIndex}
+                focused={!!focus && focus.id === pl.id}
+                onClick={(id, position) => setFocus({ id, position })}
+                onHoverChange={(id, h) => setHoveredId(h ? id : (hoveredId === id ? null : hoveredId))}
+              />
+            );
+            if (!motionReady) {
+              return <group key={`planet-${pl.id}`}>{planetNode}</group>;
+            }
             return (
               <Trail
                 key={`trail-${pl.id}`}
@@ -280,24 +365,7 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
                 decay={0.6}
                 local
               >
-                <Planet
-                  id={pl.id}
-                  name={pl.name}
-                  index={i}
-                  orbitRadius={pl.radius}
-                  orbitHeight={pl.height}
-                  color={pl.color}
-                  cloudTint={pl.cloudTint}
-                  atmTint={pl.atmTint}
-                  multiTint={pl.multiTint}
-                  hideLabel={!!focus || i >= VISIBLE_LABELS_MAX}
-                  size={pl.size}
-                  speed={pl.speed}
-                  active={i === activeIndex}
-                  focused={!!focus && focus.id === pl.id}
-                  onClick={(id, position) => setFocus({ id, position })}
-                  onHoverChange={(id, h) => setHoveredId(h ? id : (hoveredId === id ? null : hoveredId))}
-                />
+                {planetNode}
               </Trail>
             );
           })}
@@ -313,7 +381,7 @@ export function ProjectUniverse({ renderBelowDetails = true }: { renderBelowDeta
             largestRadius={largestRadius}
           />
           <OrbitControls enablePan={false} enableZoom={false} enableRotate={!focus} />
-          {visuals === "enhanced" ? <UniverseFX /> : null}
+          {shouldShowEnhancements ? <UniverseFX /> : null}
         </Canvas>
         )}
 

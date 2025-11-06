@@ -26,6 +26,7 @@ export type ResearchPaper = {
 export type ResearchCatalogue = {
   preprints: ResearchPaper[];
   published: ResearchPaper[];
+  ongoing : ResearchPaper[];
 };
 
 export type JobRole = {
