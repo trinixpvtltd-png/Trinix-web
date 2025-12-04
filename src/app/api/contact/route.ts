@@ -1,10 +1,8 @@
 import { NextResponse } from "next/server";
-import { Resend } from "resend";
 
-const resend = new Resend(process.env.RESEND_API_KEY);
-
-const FROM_ADDRESS = process.env.RESEND_FROM_ADDRESS || "Trinix Contact Form <no-reply@trinix.org.in>";
-const CONTACT_RECEIVER = process.env.CONTACT_RECEIVER || "info@trinix.org.in";
+const EMAILJS_SERVICE_ID = process.env.EMAILJS_SERVICE_ID!;
+const EMAILJS_TEMPLATE_ID = process.env.EMAILJS_TEMPLATE_ID!;
+const EMAILJS_PUBLIC_KEY = process.env.EMAILJS_PUBLIC_KEY!;
 
 export async function POST(request: Request) {
   try {
@@ -18,39 +16,49 @@ export async function POST(request: Request) {
     };
 
     if (!sanitized.fullName || !sanitized.email || !sanitized.message) {
-      return NextResponse.json({ ok: false, message: "Missing required fields" }, { status: 400 });
+      return NextResponse.json(
+        { ok: false, message: "Missing required fields" },
+        { status: 400 }
+      );
     }
 
-    const { error } = await resend.emails.send({
-      from: FROM_ADDRESS, 
-      to: CONTACT_RECEIVER, 
-      replyTo: sanitized.email, 
-      subject: `New Contact Message from ${sanitized.fullName}`,
-      text: `
-You’ve received a new message from the Trinix Contact Form:
+    // EmailJS API endpoint
+    const url = "https://api.emailjs.com/api/v1.0/email/send";
 
------------------------------------------
-Full Name: ${sanitized.fullName}
-Email: ${sanitized.email}
-Company: ${sanitized.company || "(Not provided)"}
------------------------------------------
+    const payload = {
+      service_id: EMAILJS_SERVICE_ID,
+      template_id: EMAILJS_TEMPLATE_ID,
+      user_id: EMAILJS_PUBLIC_KEY,
+      template_params: {
+        fullName: sanitized.fullName,
+        email: sanitized.email,
+        company: sanitized.company || "(Not provided)",
+        message: sanitized.message,
+      },
+    };
 
-Message:
-${sanitized.message}
-
------------------------------------------
-This message was sent via trinix.org.in contact form.
-      `,
+    const emailRes = await fetch(url, {
+      method: "POST",
+      headers: {
+        "Content-Type": "application/json",
+      },
+      body: JSON.stringify(payload),
     });
 
-    if (error) {
-      console.error("[api/contact] Resend error", error);
-      return NextResponse.json({ ok: false, message: "Failed to send email" }, { status: 500 });
+    if (!emailRes.ok) {
+      console.error("[api/contact] EmailJS error", await emailRes.text());
+      return NextResponse.json(
+        { ok: false, message: "Failed to send email" },
+        { status: 500 }
+      );
     }
 
     return NextResponse.json({ ok: true });
   } catch (error) {
     console.error("[api/contact] Unexpected error", error);
-    return NextResponse.json({ ok: false, message: "Internal error" }, { status: 500 });
+    return NextResponse.json(
+      { ok: false, message: "Internal error" },
+      { status: 500 }
+    );
   }
 }
